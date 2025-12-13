@@ -2,10 +2,13 @@ import dash
 from dash import html, dcc, Input, Output, State
 import csv, os, hashlib
 
+
 dash.register_page(__name__, path="/")
+
 
 def hash_password(pw):
     return hashlib.sha256(pw.encode()).hexdigest()
+
 
 def layout():
     return html.Div(
@@ -18,6 +21,8 @@ def layout():
             "fontFamily": "Arial"
         },
         children=[
+            dcc.Location(id="url-login"),
+
             html.Div(
                 style={
                     "width": "380px",
@@ -37,6 +42,7 @@ def layout():
                     html.H2("Smart Campus Navigation System", style={"color": "#333"}),
                     html.H3("Login", style={"color": "#555", "marginBottom": "25px"}),
 
+                    
                     dcc.Input(
                         id="login-username",
                         type="text",
@@ -51,6 +57,7 @@ def layout():
                         }
                     ),
 
+                    
                     html.Div(
                         style={"position": "relative", "width": "100%"},
                         children=[
@@ -85,6 +92,7 @@ def layout():
                         ]
                     ),
 
+                    # LOGIN BUTTON
                     html.Button(
                         "Login",
                         id="login-btn",
@@ -103,6 +111,7 @@ def layout():
 
                     html.Div(id="login-output", style={"marginTop": "15px", "color": "red"}),
 
+                    # SIGNUP LINK
                     html.Div(
                         [
                             html.Span("Don't have an account? "),
@@ -116,23 +125,25 @@ def layout():
     )
 
 
+
 @dash.callback(
     Output("login-output", "children"),
+    Output("url-login", "href"),
     Input("login-btn", "n_clicks"),
     State("login-username", "value"),
-    State("login-password", "value"),
+    State("login-password", "value")
 )
 def login_user(n, username, password):
     if not n:
-        return ""
+        return "", dash.no_update
 
     if not username or not password:
-        return "Please enter both username and password."
+        return "Please enter both username and password.", dash.no_update
 
     filepath = "data/user_data.csv"
 
     if not os.path.exists(filepath):
-        return "User database not found."
+        return "User database not found.", dash.no_update
 
     hashed_pw = hash_password(password)
 
@@ -141,9 +152,11 @@ def login_user(n, username, password):
 
         for row in reader:
             if row["username"] == username and row["password"] == hashed_pw:
-                return html.Div("Login Successful!", style={"color": "green"})
+                return html.Div("Login Successful!", style={"color": "green"}), "/dashboard"
 
-    return "Invalid username or password."
+    return "Invalid username or password.", dash.no_update
+
+
 
 @dash.callback(
     Output("login-password", "type"),

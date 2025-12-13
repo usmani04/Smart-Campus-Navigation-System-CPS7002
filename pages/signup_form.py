@@ -117,6 +117,15 @@ def layout():
                         }
                     ),
 
+                    dcc.Checklist(
+    id="signup-consent",
+    options=[
+        {"label": " I agree to the collection and processing of my data (GDPR Consent)", "value": "yes"}
+    ],
+    style={"marginBottom": "20px", "fontSize": "14px", "textAlign": "left"}
+),
+
+
                     html.Button(
                         "Sign Up",
                         id="signup-btn",
@@ -154,6 +163,7 @@ def layout():
     Input("toggle-password", "n_clicks"),
     prevent_initial_call=True
 )
+
 def toggle_password(n):
     if n % 2 == 1:
         return "text"
@@ -166,8 +176,40 @@ def toggle_password(n):
     State("signup-username", "value"),
     State("signup-email", "value"),
     State("signup-password", "value"),
-    State("signup-role", "value")
+    State("signup-role", "value"),
+    State("signup-consent", "value")
 )
+def signup(n, username, email, password, role, consent):
+
+    if not n:
+        return ""
+
+    if not all([username, email, password]):
+        return "Please fill all required fields!"
+
+    if not role:
+        role = "Regular User"
+
+ 
+    if consent != ["yes"]:
+        return "You must agree to GDPR data consent before signing up."
+
+    hashed_pw = hash_password(password)
+    file_path = "data/user_data.csv"
+
+    file_exists = os.path.isfile(file_path)
+
+    with open(file_path, "a", newline="") as f:
+        writer = csv.writer(f)
+
+        if not file_exists:
+            writer.writerow(["username", "email", "role", "password", "consent"])
+
+        writer.writerow([username, email, role, hashed_pw, "yes"])
+
+    return "Account Created Successfully! Please Login."
+
+
 def signup(n, username, email, password, role):
     if not n:
         return ""
