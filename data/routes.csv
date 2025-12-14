@@ -1,0 +1,201 @@
+id,start_location,end_location,distance_m,accessible
+1,Gym,Library,310,False
+2,Gym,Library,57,False
+3,Gym,Library,189,False
+4,Library,Cafeteria,291,True
+5,Cafeteria,Lecture Hall A,59,True
+6,Gym,Library,490,False
+7,Lecture Hall A,Gym,119,False
+8,Gym,Cafeteria,481,True
+9,Lecture Hall A,Library,83,False
+10,Library,Gym,295,False
+11,Cafeteria,Library,111,True
+12,Cafeteria,Gym,494,False
+13,Library,Cafeteria,124,False
+14,Lecture Hall A,Library,140,False
+15,Gym,Lecture Hall A,113,True
+16,Cafeteria,Gym,288,False
+17,Library,Lecture Hall A,317,False
+18,Library,Lecture Hall A,444,True
+19,Cafeteria,Lecture Hall A,405,False
+20,Library,Gym,457,False
+21,Library,Gym,247,False
+22,Lecture Hall A,Gym,170,True
+23,Lecture Hall A,Library,109,False
+24,Gym,Cafeteria,138,False
+25,Cafeteria,Lecture Hall A,127,True
+26,Lecture Hall A,Gym,490,False
+27,Gym,Cafeteria,351,False
+28,Gym,Library,466,False
+29,Gym,Lecture Hall A,217,False
+30,Cafeteria,Library,496,False
+31,Cafeteria,Gym,260,False
+32,Library,Lecture Hall A,255,True
+33,Cafeteria,Gym,252,False
+34,Lecture Hall A,Cafeteria,242,True
+35,Gym,Cafeteria,500,True
+36,Library,Gym,490,True
+37,Cafeteria,Lecture Hall A,411,True
+38,Cafeteria,Gym,167,False
+39,Cafeteria,Library,60,False
+40,Lecture Hall A,Gym,341,True
+41,Gym,Cafeteria,154,False
+42,Lecture Hall A,Gym,79,False
+43,Library,Lecture Hall A,488,True
+44,Library,Lecture Hall A,192,True
+45,Cafeteria,Gym,318,False
+46,Gym,Library,80,False
+47,Cafeteria,Lecture Hall A,466,False
+48,Library,Lecture Hall A,304,True
+49,Library,Lecture Hall A,270,True
+50,Lecture Hall A,Gym,456,True
+51,Lecture Hall A,Gym,286,True
+52,Gym,Cafeteria,319,False
+53,Cafeteria,Lecture Hall A,209,False
+54,Lecture Hall A,Cafeteria,186,True
+55,Library,Cafeteria,204,True
+56,Library,Gym,428,True
+57,Library,Gym,315,False
+58,Cafeteria,Lecture Hall A,274,True
+59,Gym,Cafeteria,492,False
+60,Lecture Hall A,Library,135,True
+61,Cafeteria,Lecture Hall A,362,True
+62,Library,Cafeteria,103,True
+63,Gym,Cafeteria,380,False
+64,Library,Cafeteria,375,True
+65,Library,Cafeteria,331,False
+66,Cafeteria,Gym,400,True
+67,Gym,Cafeteria,161,False
+68,Library,Gym,53,True
+69,Cafeteria,Library,100,True
+70,Gym,Library,111,False
+71,Gym,Cafeteria,334,True
+72,Library,Lecture Hall A,75,True
+73,Library,Lecture Hall A,271,False
+74,Lecture Hall A,Library,447,False
+75,Lecture Hall A,Library,224,True
+76,Library,Cafeteria,163,False
+77,Library,Gym,328,False
+78,Library,Lecture Hall A,441,True
+79,Lecture Hall A,Gym,378,False
+80,Lecture Hall A,Library,136,False
+81,Gym,Cafeteria,346,True
+82,Gym,Lecture Hall A,287,True
+83,Gym,Lecture Hall A,139,True
+84,Gym,Library,337,False
+85,Cafeteria,Lecture Hall A,145,True
+86,Cafeteria,Library,409,True
+87,Gym,Cafeteria,52,True
+88,Gym,Library,469,True
+89,Library,Gym,476,False
+90,Lecture Hall A,Cafeteria,52,True
+91,Cafeteria,Library,280,True
+92,Cafeteria,Library,324,False
+93,Library,Gym,233,False
+94,Cafeteria,Gym,223,False
+95,Lecture Hall A,Library,481,False
+96,Cafeteria,Lecture Hall A,436,True
+97,Cafeteria,Gym,80,True
+98,Gym,Library,368,True
+99,Gym,Library,105,False
+100,Cafeteria,Library,201,False
+101,Cafeteria,Library,437,False
+102,Cafeteria,Lecture Hall A,360,True
+103,Lecture Hall A,Gym,180,True
+104,Cafeteria,Gym,417,False
+105,Gym,Lecture Hall A,212,True
+106,Gym,Lecture Hall A,415,False
+107,Library,Cafeteria,107,True
+108,Library,Cafeteria,354,False
+109,Gym,Cafeteria,164,True
+110,Library,Lecture Hall A,125,True
+111,Library,Gym,358,True
+112,Gym,Cafeteria,362,True
+113,Cafeteria,Lecture Hall A,467,False
+114,Cafeteria,Library,473,False
+115,Library,Lecture Hall A,318,False
+116,Library,Lecture Hall A,497,True
+117,Library,Lecture Hall A,396,True
+118,Library,Cafeteria,135,False
+119,Lecture Hall A,Library,210,True
+120,Gym,Library,81,False
+121,Gym,Library,307,False
+122,Library,Cafeteria,285,True
+123,Lecture Hall A,Cafeteria,69,True
+124,Cafeteria,Lecture Hall A,253,True
+125,Lecture Hall A,Cafeteria,276,True
+126,Gym,Cafeteria,181,False
+127,Cafeteria,Lecture Hall A,60,True
+128,Gym,Library,211,True
+129,Lecture Hall A,Gym,364,False
+130,Lecture Hall A,Gym,92,True
+131,Gym,Lecture Hall A,57,False
+132,Library,Cafeteria,443,False
+133,Lecture Hall A,Gym,310,True
+134,Cafeteria,Library,159,False
+135,Cafeteria,Gym,343,False
+136,Lecture Hall A,Library,344,False
+137,Gym,Lecture Hall A,254,False
+138,Lecture Hall A,Cafeteria,395,False
+139,Gym,Library,206,False
+140,Gym,Library,424,True
+141,Library,Lecture Hall A,455,True
+142,Cafeteria,Lecture Hall A,293,False
+143,Lecture Hall A,Library,378,False
+144,Library,Gym,158,True
+145,Cafeteria,Gym,92,True
+146,Gym,Library,442,False
+147,Cafeteria,Library,88,True
+148,Gym,Cafeteria,229,True
+149,Cafeteria,Gym,234,False
+150,Gym,Library,217,True
+151,Gym,Library,412,True
+152,Lecture Hall A,Library,401,False
+153,Library,Gym,415,True
+154,Gym,Lecture Hall A,442,False
+155,Lecture Hall A,Gym,99,False
+156,Cafeteria,Lecture Hall A,114,True
+157,Gym,Lecture Hall A,459,True
+158,Cafeteria,Lecture Hall A,70,True
+159,Gym,Library,116,True
+160,Library,Cafeteria,425,False
+161,Library,Gym,392,True
+162,Library,Gym,335,True
+163,Library,Gym,178,True
+164,Lecture Hall A,Cafeteria,471,False
+165,Library,Gym,492,False
+166,Lecture Hall A,Cafeteria,447,True
+167,Library,Cafeteria,430,False
+168,Library,Gym,393,False
+169,Cafeteria,Library,311,False
+170,Cafeteria,Gym,401,False
+171,Lecture Hall A,Gym,65,False
+172,Cafeteria,Gym,467,True
+173,Lecture Hall A,Cafeteria,319,True
+174,Lecture Hall A,Cafeteria,374,True
+175,Cafeteria,Gym,258,True
+176,Lecture Hall A,Library,238,False
+177,Cafeteria,Gym,339,False
+178,Gym,Cafeteria,99,True
+179,Library,Gym,286,False
+180,Lecture Hall A,Gym,259,False
+181,Cafeteria,Gym,273,True
+182,Cafeteria,Library,414,False
+183,Lecture Hall A,Gym,432,False
+184,Cafeteria,Library,356,True
+185,Gym,Library,234,False
+186,Lecture Hall A,Library,379,False
+187,Gym,Cafeteria,227,True
+188,Library,Gym,261,False
+189,Lecture Hall A,Library,328,False
+190,Cafeteria,Gym,353,False
+191,Library,Cafeteria,127,False
+192,Library,Cafeteria,156,True
+193,Library,Lecture Hall A,135,True
+194,Gym,Lecture Hall A,263,False
+195,Cafeteria,Gym,80,False
+196,Library,Lecture Hall A,455,True
+197,Library,Cafeteria,415,True
+198,Cafeteria,Library,470,True
+199,Library,Cafeteria,476,False
+200,Gym,Lecture Hall A,390,False

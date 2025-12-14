@@ -1,6 +1,6 @@
 import dash
 from dash import html, dcc, Input, Output, callback
-from pages import manage_user
+from pages import manage_user, analytics_report
 
 BLUE = "#0B63C5"
 LIGHT = "#F4F9FF"
@@ -31,6 +31,7 @@ def layout():
         children=[
             dcc.Location(id="dash-url"),
 
+            # 🔵 TOP BAR
             html.Div(
                 style={
                     "backgroundColor": BLUE,
@@ -70,9 +71,11 @@ def layout():
                 ],
             ),
 
+            # 🔵 BODY
             html.Div(
                 style={"display": "flex"},
                 children=[
+                    # 🟢 SIDEBAR
                     html.Div(
                         style={
                             "width": "220px",
@@ -83,14 +86,24 @@ def layout():
                         },
                         children=[
                             html.H3("Menu", style={"color": BLUE}),
+
                             html.Div(
                                 "👥 Manage Users",
                                 id="menu-users",
                                 n_clicks=0,
                                 style=menu_btn_style(),
                             ),
+
+                            html.Div(
+                                "📊 Analytics & Reports",
+                                id="menu-analytics",
+                                n_clicks=0,
+                                style=menu_btn_style(),
+                            ),
                         ],
                     ),
+
+                    # 🔵 CONTENT
                     html.Div(
                         id="dashboard-content",
                         style={"flex": "1", "padding": "30px"}
@@ -101,13 +114,28 @@ def layout():
     )
 
 
+# ✅ SINGLE CALLBACK – NO CONFLICT
 @callback(
     Output("dashboard-content", "children"),
-    Input("menu-users", "n_clicks"),
+    [
+        Input("menu-users", "n_clicks"),
+        Input("menu-analytics", "n_clicks"),
+    ],
 )
-def update_page(n_clicks):
-    if n_clicks:
+def update_page(users_clicks, analytics_clicks):
+    ctx = dash.callback_context
+
+    if not ctx.triggered:
+        return dash.no_update
+
+    button_id = ctx.triggered[0]["prop_id"].split(".")[0]
+
+    if button_id == "menu-users":
         return manage_user.layout()
+
+    if button_id == "menu-analytics":
+        return analytics_report.layout()
+
     return dash.no_update
 
 
