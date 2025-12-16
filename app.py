@@ -1,12 +1,16 @@
-from dash import Dash, page_container
+import dash
+from dash import html, dcc
 
-app = Dash(
-    __name__,
-    use_pages=True,
-    suppress_callback_exceptions=True
+app = dash.Dash(__name__, use_pages=True, suppress_callback_exceptions=True)
+
+server = app.server
+
+app.layout = html.Div(
+    [
+        dcc.Location(id="url"),
+        dash.page_container
+    ]
 )
 
-app.layout = page_container
-
 if __name__ == "__main__":
-    app.run(debug=True, port=8050)
+    app.run(debug=True)  
