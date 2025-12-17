@@ -199,3 +199,4 @@ id,start_location,end_location,distance_m,accessible
 198,Cafeteria,Library,470,True
 199,Library,Cafeteria,476,False
 200,Gym,Lecture Hall A,390,False
+201,zaeem,tt,12,True

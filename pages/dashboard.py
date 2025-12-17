@@ -1,12 +1,14 @@
 import dash
 from dash import html, dcc, Input, Output, callback
-from pages import manage_user, analytics_report, access_control  
+from pages import manage_user, analytics_report, access_control, manage_route
+
 
 BLUE = "#0B63C5"
 LIGHT = "#F4F9FF"
 WHITE = "#FFFFFF"
 
 dash.register_page(__name__, path="/dashboard")
+
 
 def menu_btn_style():
     return {
@@ -30,6 +32,7 @@ def layout():
         children=[
             dcc.Location(id="dash-url"),
 
+            # 🔵 TOP BAR
             html.Div(
                 style={
                     "backgroundColor": BLUE,
@@ -69,9 +72,11 @@ def layout():
                 ],
             ),
 
+            # 🔵 BODY
             html.Div(
                 style={"display": "flex"},
                 children=[
+                    # 🟢 SIDEBAR
                     html.Div(
                         style={
                             "width": "220px",
@@ -103,6 +108,14 @@ def layout():
                                 n_clicks=0,
                                 style=menu_btn_style(),
                             ),
+
+                            html.Div(
+                                "🛣️ Manage Routes",
+                                id="menu-routes",
+                                n_clicks=0,
+                                style=menu_btn_style(),
+                            ),
+
                         ],
                     ),
 
@@ -115,15 +128,18 @@ def layout():
         ],
     )
 
+
 @callback(
     Output("dashboard-content", "children"),
     [
         Input("menu-users", "n_clicks"),
         Input("menu-analytics", "n_clicks"),
-        Input("menu-access-control", "n_clicks"), 
+        Input("menu-access-control", "n_clicks"),
+        Input("menu-routes", "n_clicks"),  # 🆕 ADD THIS
     ],
 )
-def update_page(users_clicks, analytics_clicks, access_control_clicks):
+def update_page(users_clicks, analytics_clicks, access_control_clicks, routes_clicks):
+
     ctx = dash.callback_context
 
     if not ctx.triggered:
@@ -139,6 +155,9 @@ def update_page(users_clicks, analytics_clicks, access_control_clicks):
 
     if button_id == "menu-access-control":
         return access_control.layout()
+    
+    if button_id == "menu-routes":
+        return manage_route.layout()
 
     return dash.no_update
 
