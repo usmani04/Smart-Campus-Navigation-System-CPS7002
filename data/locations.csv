@@ -1,0 +1,204 @@
+id,name,building,floor,accessible
+1,"Kennedy, Phillips and White",Main,1,False
+2,"Hawkins, Nielsen and White",Science,2,True
+3,Hood Inc,Engineering,4,False
+4,Torres-Brown,Recreation,5,True
+5,Snyder Ltd,Engineering,4,False
+6,Bass and Sons,Engineering,1,True
+7,Hancock-Blair,Arts,5,False
+8,Shannon-Wells,Commons,5,True
+9,"Zuniga, Booth and Perez",Main,1,True
+10,"Morales, Walters and Thornton",Main,5,False
+11,Parks-Murray,Arts,1,False
+12,Williams Group,Commons,2,False
+13,"Davis, Ray and Boyle",Commons,5,False
+14,"Peck, Thomas and Brown",Main,5,True
+15,Cooper Inc,Recreation,3,False
+16,"Schmitt, Ford and Bradford",Arts,2,False
+17,"Raymond, Smith and Boone",Arts,3,False
+18,"Watkins, Bradley and Lawrence",Arts,3,False
+19,"Summers, Phillips and Frye",Engineering,5,False
+20,Ortega Inc,Recreation,3,True
+21,"Clark, Jenkins and Rodriguez",Science,4,False
+22,"Wright, Abbott and Sanchez",Recreation,5,False
+23,Scott-Meadows,Recreation,1,True
+24,"Farrell, Cook and Salazar",Commons,4,False
+25,"Fletcher, Armstrong and Weaver",Commons,1,True
+26,"King, Johnson and Castillo",Recreation,4,True
+27,"Haley, Weber and Allen",Engineering,3,True
+28,Ortiz Ltd,Science,1,False
+29,"Davidson, Gray and Baker",Science,2,False
+30,Richardson-Austin,Recreation,3,False
+31,Barry-Kennedy,Science,4,True
+32,Gibbs-Thompson,Main,1,False
+33,Archer-Lawrence,Science,1,True
+34,Mcclure-Horton,Science,1,True
+35,Long-Burton,Arts,3,True
+36,"Arnold, Owens and Lopez",Commons,4,True
+37,"Diaz, Fletcher and Garcia",Arts,1,False
+38,Rogers-Mitchell,Arts,1,True
+39,Dalton-Cox,Science,1,True
+40,"White, Moore and Pollard",Engineering,1,True
+41,Smith and Sons,Science,4,False
+42,Gardner Group,Engineering,3,False
+43,"Davis, Alexander and Luna",Science,5,True
+44,Warren-Skinner,Arts,2,True
+45,Martin Group,Arts,1,False
+46,"Lopez, Meyer and Carter",Main,1,True
+47,Camacho-Nguyen,Arts,2,False
+48,Richardson LLC,Arts,1,False
+49,Smith-Taylor,Arts,2,True
+50,Hernandez and Sons,Main,2,False
+51,Davidson-Harrison,Engineering,5,False
+52,Payne-Lee,Commons,2,True
+53,"Durham, Mills and Flores",Engineering,2,False
+54,Jimenez Ltd,Engineering,1,False
+55,Boyd-Terry,Main,1,True
+56,Johnson Ltd,Arts,1,True
+57,"Haynes, Ochoa and Gomez",Engineering,3,True
+58,Arnold-Jimenez,Recreation,3,True
+59,"Powell, Williams and Galloway",Main,1,True
+60,"Martinez, Shaw and Huber",Engineering,4,False
+61,Ayala-Jenkins,Engineering,2,False
+62,"Carter, Stokes and Mccullough",Arts,1,True
+63,"Sims, Kim and Owens",Engineering,5,False
+64,"Thompson, Alvarado and Jenkins",Science,4,False
+65,Brown PLC,Engineering,5,False
+66,Smith Group,Recreation,2,True
+67,Lee Inc,Recreation,3,True
+68,Donovan-Miller,Arts,3,True
+69,"Wise, Kline and Grant",Science,3,True
+70,Lynch-Owens,Commons,2,False
+71,Carr-Cameron,Engineering,3,True
+72,Flowers LLC,Science,1,False
+73,Collier-Hinton,Science,2,True
+74,Willis-Banks,Arts,3,True
+75,Contreras PLC,Recreation,5,False
+76,Oneill-Bush,Engineering,2,True
+77,Pope-Carlson,Main,2,False
+78,"Roth, Jones and Pearson",Recreation,3,False
+79,Walker-Scott,Recreation,1,True
+80,Moore Ltd,Commons,5,True
+81,"Sanchez, Lopez and Stone",Arts,2,True
+82,Smith LLC,Science,3,False
+83,Nguyen Group,Science,4,False
+84,"Smith, Petty and Brady",Main,2,False
+85,Rivera Group,Arts,1,True
+86,"Brown, Rodriguez and Copeland",Recreation,5,True
+87,Sims-Orozco,Science,3,False
+88,Lopez Group,Main,4,False
+89,Thomas and Sons,Arts,4,True
+90,Lee-Rogers,Commons,3,True
+91,Baker-Leon,Arts,3,True
+92,Compton LLC,Arts,3,False
+93,Simmons PLC,Commons,4,False
+94,Warren and Sons,Main,5,True
+95,"Jones, Frazier and Bird",Arts,4,True
+96,Williams-Hubbard,Science,1,False
+97,"Gordon, Smith and Acevedo",Main,1,False
+98,"Lee, Simpson and Holmes",Commons,2,True
+99,Ingram-Foster,Engineering,5,True
+100,Castro LLC,Recreation,5,True
+101,"Clark, Stone and Hill",Commons,5,True
+102,Perry Group,Science,5,True
+103,Cannon LLC,Commons,3,True
+104,Torres Ltd,Engineering,5,False
+105,Taylor-Herman,Arts,2,False
+106,Wilson and Sons,Arts,2,True
+107,Moore-Allen,Arts,1,True
+108,Garcia-Edwards,Recreation,4,True
+109,"Miller, Gomez and Coleman",Science,3,True
+110,Fisher Group,Commons,4,False
+111,Garcia Inc,Recreation,2,False
+112,"Kelly, Yates and Terry",Arts,3,True
+113,Kelly-Smith,Main,4,True
+114,Williams-Green,Science,1,False
+115,Morris Group,Science,4,True
+116,Ingram Group,Science,1,True
+117,Porter LLC,Engineering,2,True
+118,"Phillips, Meyers and Bird",Arts,3,False
+119,Vasquez Group,Science,3,True
+120,Burns-Brown,Commons,1,True
+121,"Palmer, Sutton and Wilkins",Main,2,False
+122,Williams-Adams,Engineering,5,False
+123,Wilcox-Cruz,Engineering,3,True
+124,Moreno Group,Main,4,True
+125,"Ruiz, Mckinney and Trujillo",Main,1,True
+126,"Alexander, Cook and Adams",Recreation,2,True
+127,Thompson-Roberts,Main,5,False
+128,"Palmer, Park and Hansen",Recreation,2,True
+129,Flores Group,Engineering,3,True
+130,"Martin, Allen and Henderson",Engineering,3,True
+131,Morris LLC,Engineering,5,True
+132,"Edwards, Sanchez and Johnson",Engineering,3,False
+133,"Silva, Peters and Briggs",Recreation,4,True
+134,"Romero, Briggs and Stephens",Recreation,5,False
+135,Jones Inc,Science,1,True
+136,"Newman, Mendez and Douglas",Science,3,True
+137,Wade Inc,Engineering,5,False
+138,Newman-Aguirre,Arts,5,True
+139,"Thompson, Ward and Jackson",Commons,3,False
+140,"Gutierrez, Patel and Powers",Science,3,False
+141,Andrews-Gonzalez,Engineering,5,True
+142,"Mahoney, Smith and Palmer",Commons,2,False
+143,Ballard-Johnson,Main,2,True
+144,Lewis LLC,Engineering,2,True
+145,Bell-Kelly,Science,2,True
+146,Romero PLC,Main,4,True
+147,Costa PLC,Engineering,1,True
+148,Carpenter-Higgins,Commons,3,True
+149,Knight-Brown,Main,4,False
+150,"Johnson, Hurst and Perkins",Science,4,True
+151,"Washington, Powell and Armstrong",Arts,1,True
+152,Hall PLC,Arts,1,False
+153,Herrera and Sons,Engineering,5,False
+154,Mendoza and Sons,Main,5,False
+155,Rocha-Johnson,Science,3,True
+156,Walker Inc,Recreation,1,False
+157,Navarro-Bell,Recreation,5,True
+158,Clay Group,Science,5,False
+159,"Turner, Johnson and Wood",Engineering,2,False
+160,Smith-Knapp,Engineering,2,True
+161,"Barnes, Johnson and Castillo",Commons,5,True
+162,"Jackson, Porter and Green",Recreation,3,True
+163,"Brown, Martinez and Armstrong",Science,5,False
+164,Allen Group,Arts,4,False
+165,Lloyd Group,Recreation,2,True
+166,Flores LLC,Recreation,2,True
+167,Christensen and Sons,Recreation,3,True
+168,"Cruz, Walker and Burns",Recreation,1,False
+169,Bond LLC,Engineering,1,True
+170,"Williams, Livingston and Murphy",Arts,4,False
+171,"Miller, Galloway and Clark",Engineering,5,False
+172,Davis Group,Main,3,False
+173,"Lopez, Wood and Espinoza",Recreation,3,True
+174,Davies-Cross,Engineering,5,True
+175,Jones Group,Arts,1,True
+176,Hamilton-Parks,Arts,3,True
+177,Perry-Wolf,Arts,2,False
+178,Stanton-Holland,Recreation,2,True
+179,West-Garcia,Engineering,2,True
+180,Bryant Inc,Engineering,2,True
+181,Mccormick-Guerra,Science,1,True
+182,"Henderson, Wright and Leon",Commons,1,False
+183,Singleton PLC,Recreation,5,True
+184,Rogers PLC,Science,4,False
+185,Gutierrez Ltd,Recreation,2,False
+186,Park-Pitts,Recreation,5,True
+187,"Hawkins, Hall and Perkins",Main,3,False
+188,"Watkins, Flowers and Mckinney",Engineering,2,False
+189,Taylor PLC,Main,2,False
+190,Wood Ltd,Arts,1,True
+191,"Stewart, Kemp and Carlson",Commons,2,True
+192,"Woodard, Oconnor and Carlson",Arts,1,False
+193,Cortez-Powell,Science,4,True
+194,Armstrong Inc,Commons,3,False
+195,Mitchell-Sheppard,Commons,4,True
+196,Donaldson Group,Engineering,3,True
+197,"Larson, Smith and Leonard",Recreation,3,False
+198,"Mcgrath, Hayes and Lambert",Commons,1,False
+199,Garcia PLC,Engineering,1,False
+200,Smith-Pruitt,Recreation,5,False
+201,200,tokyo towers main,4,True
+202,200,sky scappers,66,False
+203,frgh,sky scappers2,69,True

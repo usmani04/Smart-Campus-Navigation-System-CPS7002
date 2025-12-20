@@ -1,0 +1,206 @@
+id,user_id,message,delivered
+1,1,New cafeteria menu available,False
+2,2,Room change for CS101,True
+3,3,New cafeteria menu available,True
+4,4,Emergency drill at 3 PM,False
+5,5,New cafeteria menu available,False
+6,6,Gym closed for cleaning,True
+7,7,Emergency drill at 3 PM,False
+8,8,Room change for CS101,False
+9,9,Emergency drill at 3 PM,False
+10,10,Maintenance in Lecture Hall A,True
+11,11,Library closed for renovation,True
+12,12,Emergency drill at 3 PM,True
+13,13,Gym closed for cleaning,False
+14,14,New cafeteria menu available,True
+15,15,Library closed for renovation,False
+16,16,Gym closed for cleaning,False
+17,17,Gym closed for cleaning,True
+18,18,New cafeteria menu available,False
+19,19,Emergency drill at 3 PM,False
+20,20,Library closed for renovation,False
+21,21,Room change for CS101,True
+22,22,New cafeteria menu available,False
+23,23,Room change for CS101,False
+24,24,Emergency drill at 3 PM,False
+25,25,Emergency drill at 3 PM,False
+26,26,New cafeteria menu available,True
+27,27,Room change for CS101,True
+28,28,New cafeteria menu available,False
+29,29,Gym closed for cleaning,False
+30,30,Emergency drill at 3 PM,True
+31,31,Maintenance in Lecture Hall A,True
+32,32,Maintenance in Lecture Hall A,True
+33,33,Library closed for renovation,False
+34,34,New cafeteria menu available,False
+35,35,Gym closed for cleaning,False
+36,36,Library closed for renovation,False
+37,37,Room change for CS101,False
+38,38,Maintenance in Lecture Hall A,False
+39,39,Room change for CS101,False
+40,40,New cafeteria menu available,False
+41,41,Library closed for renovation,True
+42,42,Gym closed for cleaning,False
+43,43,Emergency drill at 3 PM,True
+44,44,Emergency drill at 3 PM,True
+45,45,Library closed for renovation,True
+46,46,Emergency drill at 3 PM,True
+47,47,Library closed for renovation,False
+48,48,Maintenance in Lecture Hall A,False
+49,49,Maintenance in Lecture Hall A,True
+50,50,Room change for CS101,False
+51,51,Room change for CS101,False
+52,52,Maintenance in Lecture Hall A,True
+53,53,Emergency drill at 3 PM,False
+54,54,Gym closed for cleaning,False
+55,55,Room change for CS101,False
+56,56,Library closed for renovation,True
+57,57,New cafeteria menu available,False
+58,58,New cafeteria menu available,True
+59,59,Library closed for renovation,False
+60,60,Maintenance in Lecture Hall A,False
+61,61,Maintenance in Lecture Hall A,False
+62,62,Library closed for renovation,False
+63,63,Emergency drill at 3 PM,False
+64,64,Emergency drill at 3 PM,False
+65,65,New cafeteria menu available,True
+66,66,New cafeteria menu available,False
+67,67,New cafeteria menu available,True
+68,68,New cafeteria menu available,False
+69,69,Maintenance in Lecture Hall A,True
+70,70,Maintenance in Lecture Hall A,True
+71,71,Maintenance in Lecture Hall A,True
+72,72,Library closed for renovation,True
+73,73,New cafeteria menu available,True
+74,74,Maintenance in Lecture Hall A,True
+75,75,New cafeteria menu available,False
+76,76,New cafeteria menu available,True
+77,77,Library closed for renovation,False
+78,78,Room change for CS101,True
+79,79,Library closed for renovation,False
+80,80,Maintenance in Lecture Hall A,True
+81,81,Gym closed for cleaning,True
+82,82,Emergency drill at 3 PM,True
+83,83,Room change for CS101,False
+84,84,Emergency drill at 3 PM,False
+85,85,New cafeteria menu available,False
+86,86,Maintenance in Lecture Hall A,False
+87,87,Room change for CS101,True
+88,88,Gym closed for cleaning,True
+89,89,Gym closed for cleaning,True
+90,90,Maintenance in Lecture Hall A,False
+91,91,Library closed for renovation,False
+92,92,Library closed for renovation,False
+93,93,Maintenance in Lecture Hall A,True
+94,94,Room change for CS101,False
+95,95,Room change for CS101,True
+96,96,Emergency drill at 3 PM,False
+97,97,Emergency drill at 3 PM,False
+98,98,New cafeteria menu available,True
+99,99,New cafeteria menu available,True
+100,100,Maintenance in Lecture Hall A,False
+101,101,Room change for CS101,False
+102,102,Emergency drill at 3 PM,False
+103,103,Maintenance in Lecture Hall A,False
+104,104,New cafeteria menu available,True
+105,105,New cafeteria menu available,False
+106,106,Maintenance in Lecture Hall A,False
+107,107,New cafeteria menu available,True
+108,108,New cafeteria menu available,True
+109,109,Library closed for renovation,False
+110,110,Library closed for renovation,True
+111,111,Room change for CS101,True
+112,112,Room change for CS101,True
+113,113,Room change for CS101,True
+114,114,Maintenance in Lecture Hall A,True
+115,115,New cafeteria menu available,False
+116,116,Library closed for renovation,True
+117,117,New cafeteria menu available,False
+118,118,Library closed for renovation,True
+119,119,Maintenance in Lecture Hall A,True
+120,120,New cafeteria menu available,False
+121,121,Library closed for renovation,False
+122,122,New cafeteria menu available,True
+123,123,Maintenance in Lecture Hall A,True
+124,124,Gym closed for cleaning,False
+125,125,Room change for CS101,True
+126,126,New cafeteria menu available,True
+127,127,New cafeteria menu available,True
+128,128,Emergency drill at 3 PM,False
+129,129,Emergency drill at 3 PM,False
+130,130,Room change for CS101,False
+131,131,Emergency drill at 3 PM,True
+132,132,Maintenance in Lecture Hall A,True
+133,133,Emergency drill at 3 PM,True
+134,134,New cafeteria menu available,False
+135,135,Gym closed for cleaning,False
+136,136,Maintenance in Lecture Hall A,False
+137,137,Gym closed for cleaning,False
+138,138,Emergency drill at 3 PM,False
+139,139,Gym closed for cleaning,False
+140,140,Library closed for renovation,True
+141,141,Library closed for renovation,True
+142,142,Room change for CS101,True
+143,143,Emergency drill at 3 PM,False
+144,144,Maintenance in Lecture Hall A,False
+145,145,Room change for CS101,True
+146,146,Gym closed for cleaning,True
+147,147,New cafeteria menu available,True
+148,148,Gym closed for cleaning,True
+149,149,Emergency drill at 3 PM,True
+150,150,New cafeteria menu available,False
+151,151,Gym closed for cleaning,True
+152,152,Library closed for renovation,True
+153,153,Room change for CS101,False
+154,154,Gym closed for cleaning,False
+155,155,New cafeteria menu available,False
+156,156,Library closed for renovation,False
+157,157,Gym closed for cleaning,False
+158,158,Maintenance in Lecture Hall A,False
+159,159,Maintenance in Lecture Hall A,True
+160,160,Emergency drill at 3 PM,False
+161,161,New cafeteria menu available,False
+162,162,Maintenance in Lecture Hall A,True
+163,163,Gym closed for cleaning,True
+164,164,Gym closed for cleaning,True
+165,165,Gym closed for cleaning,True
+166,166,Room change for CS101,False
+167,167,Library closed for renovation,True
+168,168,Library closed for renovation,False
+169,169,Maintenance in Lecture Hall A,True
+170,170,Emergency drill at 3 PM,True
+171,171,New cafeteria menu available,True
+172,172,Library closed for renovation,True
+173,173,Room change for CS101,False
+174,174,Maintenance in Lecture Hall A,True
+175,175,Maintenance in Lecture Hall A,True
+176,176,Gym closed for cleaning,True
+177,177,New cafeteria menu available,False
+178,178,Room change for CS101,False
+179,179,Room change for CS101,True
+180,180,Emergency drill at 3 PM,False
+181,181,Emergency drill at 3 PM,True
+182,182,Library closed for renovation,True
+183,183,Gym closed for cleaning,True
+184,184,Emergency drill at 3 PM,False
+185,185,Emergency drill at 3 PM,False
+186,186,New cafeteria menu available,False
+187,187,Emergency drill at 3 PM,False
+188,188,Library closed for renovation,True
+189,189,Maintenance in Lecture Hall A,True
+190,190,Room change for CS101,True
+191,191,New cafeteria menu available,True
+192,192,Emergency drill at 3 PM,True
+193,193,Room change for CS101,True
+194,194,New cafeteria menu available,False
+195,195,Maintenance in Lecture Hall A,True
+196,196,Gym closed for cleaning,True
+197,197,Library closed for renovation,False
+198,198,Maintenance in Lecture Hall A,True
+199,199,Library closed for renovation,False
+200,200,Room change for CS101,True
+201,1,New location '200' added,False
+202,1,"New location '('sky scappers2', '69')' added",False
+203,1,New route 'Gym → Library' added,False
+204,1,New route 'dd → ss' added,False
+205,23,hhjsf,True
