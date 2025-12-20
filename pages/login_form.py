@@ -1,10 +1,9 @@
 import dash
 from dash import html, dcc, Input, Output, State
 import csv, os, hashlib
-
+import json
 
 dash.register_page(__name__, path="/")
-
 
 def hash_password(pw):
     return hashlib.sha256(pw.encode()).hexdigest()
@@ -21,6 +20,9 @@ def layout():
             "fontFamily": "Arial"
         },
         children=[
+
+            # Store for current user
+            dcc.Store(id="current-user", storage_type="session"),
             dcc.Location(id="url-login"),
 
             html.Div(
@@ -42,7 +44,6 @@ def layout():
                     html.H2("Smart Campus Navigation System", style={"color": "#333"}),
                     html.H3("Login", style={"color": "#555", "marginBottom": "25px"}),
 
-                    
                     dcc.Input(
                         id="login-username",
                         type="text",
@@ -57,7 +58,6 @@ def layout():
                         }
                     ),
 
-                    
                     html.Div(
                         style={"position": "relative", "width": "100%"},
                         children=[
@@ -74,7 +74,6 @@ def layout():
                                     "boxSizing": "border-box"
                                 }
                             ),
-
                             html.Button(
                                 "👁️",
                                 id="toggle-pass",
@@ -92,7 +91,6 @@ def layout():
                         ]
                     ),
 
-                    # LOGIN BUTTON
                     html.Button(
                         "Login",
                         id="login-btn",
@@ -111,7 +109,6 @@ def layout():
 
                     html.Div(id="login-output", style={"marginTop": "15px", "color": "red"}),
 
-                    # SIGNUP LINK
                     html.Div(
                         [
                             html.Span("Don't have an account? "),
@@ -125,37 +122,37 @@ def layout():
     )
 
 
-
 @dash.callback(
     Output("login-output", "children"),
     Output("url-login", "href"),
+    Output("current-user", "data"),  # store logged-in user
     Input("login-btn", "n_clicks"),
     State("login-username", "value"),
     State("login-password", "value")
 )
 def login_user(n, username, password):
     if not n:
-        return "", dash.no_update
+        return "", dash.no_update, dash.no_update
 
     if not username or not password:
-        return "Please enter both username and password.", dash.no_update
+        return "Please enter both username and password.", dash.no_update, dash.no_update
 
     filepath = "data/user_data.csv"
 
     if not os.path.exists(filepath):
-        return "User database not found.", dash.no_update
+        return "User database not found.", dash.no_update, dash.no_update
 
     hashed_pw = hash_password(password)
 
     with open(filepath, "r") as f:
         reader = csv.DictReader(f)
-
         for row in reader:
             if row["username"] == username and row["password"] == hashed_pw:
-                return html.Div("Login Successful!", style={"color": "green"}), "/dashboard"
+                # store username and role in dcc.Store
+                user_data = {"username": row["username"], "role": row["role"]}
+                return html.Div("Login Successful!", style={"color": "green"}), "/dashboard", json.dumps(user_data)
 
-    return "Invalid username or password.", dash.no_update
-
+    return "Invalid username or password.", dash.no_update, dash.no_update
 
 
 @dash.callback(

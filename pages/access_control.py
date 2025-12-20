@@ -1,10 +1,9 @@
 import dash
 from dash import html, dcc, Input, Output, State, callback
 import pandas as pd
+import dash_bootstrap_components as dbc
 
 BLUE = "#0B63C5"
-LIGHT = "#F4F9FF"
-WHITE = "#FFFFFF"
 GREEN = "#28a745"
 RED = "#dc3545"
 
@@ -17,190 +16,109 @@ def load_routes():
 
 def layout():
     df = load_routes()
-    
-    locations = []
-    if not df.empty:
-        locations = sorted(set(df['start_location'].tolist() + df['end_location'].tolist()))
-    
-    return html.Div(
-        style={
-            'backgroundColor': LIGHT,
-            'minHeight': '100vh',
-            'padding': '20px'
-        },
-        children=[
-            html.H1("📍 Campus Route Finder", 
-                   style={'color': BLUE, 'marginBottom': '20px'}),
-            
-           
-            html.Div(
-                style={
-                    'backgroundColor': WHITE,
-                    'padding': '25px',
-                    'borderRadius': '10px',
-                    'boxShadow': '0 2px 10px rgba(0,0,0,0.1)',
-                    'marginBottom': '30px'
-                },
-                children=[
-                    html.H3("Find Route", style={'color': BLUE, 'marginBottom': '20px'}),
-                    
-                    html.Div(
-                        style={
-                            'display': 'grid',
-                            'gridTemplateColumns': '1fr 1fr',
-                            'gap': '20px',
-                            'marginBottom': '20px'
-                        },
-                        children=[
-                            html.Div(
-                                children=[
-                                    html.Label("From", style={'display': 'block', 'marginBottom': '8px', 'fontWeight': 'bold'}),
-                                    dcc.Dropdown(
-                                        id='start-location',
-                                        options=[{'label': loc, 'value': loc} for loc in locations],
-                                        placeholder='Select start location...',
-                                        
-                                    )
-                                ]
-                            ),
-                            html.Div(
-                                children=[
-                                    html.Label("To", style={'display': 'block', 'marginBottom': '8px', 'fontWeight': 'bold'}),
-                                    dcc.Dropdown(
-                                        id='end-location',
-                                        options=[{'label': loc, 'value': loc} for loc in locations],
-                                        placeholder='Select destination...',
-                                    )
-                                ]
-                            )
-                        ]
-                    ),
-                    
-                    html.Div(
-                        style={
-                            'display': 'flex',
-                            'gap': '20px',
-                            'marginBottom': '20px',
-                            'alignItems': 'flex-end'
-                        },
-                        children=[
-                            html.Div(
-                                style={'flex': '1'},
-                                children=[
-                                    html.Label("Filters", style={'display': 'block', 'marginBottom': '8px', 'fontWeight': 'bold'}),
-                                    dcc.Checklist(
-                                        id='filter-accessible',
-                                        options=[
-                                            {'label': ' Show only accessible routes', 'value': 'yes'}
-                                        ],
-                                        value=[]
-                                    )
-                                ]
-                            ),
-                            html.Button(
-                                'Find Routes',
-                                id='find-btn',
-                                style={
-                                    'backgroundColor': BLUE,
-                                    'color': 'white',
-                                    'border': 'none',
-                                    'padding': '10px 25px',
-                                    'borderRadius': '6px',
-                                    'cursor': 'pointer',
-                                    'fontSize': '16px',
-                                    'height': '40px'
-                                }
-                            )
-                        ]
-                    ),
-                    
-                    html.Div(id='route-result', style={'marginTop': '20px'})
-                ]
-            ),
-            
-            html.Div(
-                style={
-                    'backgroundColor': WHITE,
-                    'padding': '25px',
-                    'borderRadius': '10px',
-                    'boxShadow': '0 2px 10px rgba(0,0,0,0.1)'
-                },
-                children=[
-                    html.Div(
-                        style={
-                            'display': 'flex',
-                            'justifyContent': 'space-between',
-                            'alignItems': 'center',
-                            'marginBottom': '20px'
-                        },
-                        children=[
-                            html.H3("All Routes", style={'color': BLUE, 'margin': '0'}),
-                            html.Div(
-                                style={'display': 'flex', 'gap': '10px', 'alignItems': 'center'},
-                                children=[
-                                    dcc.Input(
-                                        id='search-routes',
-                                        placeholder='Search routes...',
-                                        style={
-                                            'padding': '8px 12px',
-                                            'border': f'1px solid {BLUE}',
-                                            'borderRadius': '6px',
-                                            'width': '200px'
-                                        }
-                                    )
-                                ]
-                            )
-                        ]
-                    ),
-                    
-                    html.Div(id='routes-table')
-                ]
-            )
-        ]
-    )
+    locations = sorted(set(df['start_location'].tolist() + df['end_location'].tolist())) if not df.empty else []
+
+    return dbc.Container([
+        html.H1("📍 Campus Route Finder", className="my-4", style={'color': BLUE}),
+
+        # Find Route Card
+        dbc.Card([
+            dbc.CardBody([
+                html.H3("Find Route", className="mb-4", style={'color': BLUE}),
+
+                dbc.Row([
+                    dbc.Col([
+                        html.Label("From", className="fw-bold"),
+                        dcc.Dropdown(
+                            id='start-location',
+                            options=[{'label': loc, 'value': loc} for loc in locations],
+                            placeholder='Select start location...'
+                        )
+                    ], md=6),
+                    dbc.Col([
+                        html.Label("To", className="fw-bold"),
+                        dcc.Dropdown(
+                            id='end-location',
+                            options=[{'label': loc, 'value': loc} for loc in locations],
+                            placeholder='Select destination...'
+                        )
+                    ], md=6)
+                ], className="mb-3"),
+
+                dbc.Row([
+                    dbc.Col([
+                        html.Label("Filters", className="fw-bold"),
+                        dcc.Checklist(
+                            id='filter-accessible',
+                            options=[{'label': ' Show only accessible routes', 'value': 'yes'}],
+                            value=[]
+                        )
+                    ], md=8),
+                    dbc.Col([
+                        dbc.Button("Find Routes", id="find-btn", color="primary", className="w-100")
+                    ], md=4)
+                ], className="mb-3"),
+
+                html.Div(id='route-result')
+            ])
+        ], className="mb-4 shadow-sm"),
+
+        # All Routes Table Card
+        dbc.Card([
+            dbc.CardBody([
+                dbc.Row([
+                    dbc.Col(html.H3("All Routes", style={'color': BLUE}), md=6),
+                    dbc.Col(
+                        dcc.Input(
+                            id='search-routes',
+                            placeholder='Search routes...',
+                            className="form-control"
+                        ),
+                        md=6
+                    )
+                ], className="mb-3"),
+
+                html.Div(id='routes-table')
+            ])
+        ], className="shadow-sm")
+    ], fluid=True)
 
 def generate_table(df):
     if df.empty:
-        return html.P("No routes data available.", style={'color': '#666'})
-    
+        return html.P("No routes data available.", className='text-muted')
 
     header = html.Tr([
-        html.Th("ID", style={'padding': '12px', 'textAlign': 'left', 'backgroundColor': LIGHT, 'borderBottom': '2px solid #ddd'}),
-        html.Th("Start", style={'padding': '12px', 'textAlign': 'left', 'backgroundColor': LIGHT, 'borderBottom': '2px solid #ddd'}),
-        html.Th("End", style={'padding': '12px', 'textAlign': 'left', 'backgroundColor': LIGHT, 'borderBottom': '2px solid #ddd'}),
-        html.Th("Distance (m)", style={'padding': '12px', 'textAlign': 'left', 'backgroundColor': LIGHT, 'borderBottom': '2px solid #ddd'}),
-        html.Th("Accessible", style={'padding': '12px', 'textAlign': 'left', 'backgroundColor': LIGHT, 'borderBottom': '2px solid #ddd'})
+        html.Th("ID", className='p-2 bg-light border'),
+        html.Th("Start", className='p-2 bg-light border'),
+        html.Th("End", className='p-2 bg-light border'),
+        html.Th("Distance (m)", className='p-2 bg-light border'),
+        html.Th("Accessible", className='p-2 bg-light border')
     ])
 
     rows = []
     for i, row in df.iterrows():
-        accessible_text = "✅ Yes" if row['accessible'] else "❌ No"
-        accessible_color = GREEN if row['accessible'] else RED
-        
+        accessible_bool = bool(row['accessible'])
+        accessible_text = "✅ Yes" if accessible_bool else "❌ No"
+        accessible_color = GREEN if accessible_bool else RED
+
         rows.append(
             html.Tr(
-                style={'backgroundColor': '#FAFAFA' if i % 2 == 0 else WHITE},
                 children=[
-                    html.Td(row['id'], style={'padding': '10px', 'borderBottom': '1px solid #eee'}),
-                    html.Td(row['start_location'], style={'padding': '10px', 'borderBottom': '1px solid #eee'}),
-                    html.Td(row['end_location'], style={'padding': '10px', 'borderBottom': '1px solid #eee'}),
-                    html.Td(row['distance_m'], style={'padding': '10px', 'borderBottom': '1px solid #eee'}),
+                    html.Td(row['id'], className='p-2 border'),
+                    html.Td(row['start_location'], className='p-2 border'),
+                    html.Td(row['end_location'], className='p-2 border'),
+                    html.Td(row['distance_m'], className='p-2 border'),
                     html.Td(
                         html.Span(accessible_text, style={'color': accessible_color, 'fontWeight': 'bold'}),
-                        style={'padding': '10px', 'borderBottom': '1px solid #eee'}
+                        className='p-2 border'
                     )
                 ]
             )
         )
-    
-    return html.Table(
-        [header] + rows,
-        style={
-            'width': '100%',
-            'borderCollapse': 'collapse',
-            'fontSize': '14px'
-        }
-    )
+
+    return dbc.Table([header] + rows, bordered=False, hover=True, responsive=True, striped=True, className="mb-0")
+
+# Callbacks
 
 @callback(
     Output('routes-table', 'children'),
@@ -209,20 +127,19 @@ def generate_table(df):
 )
 def update_table(search_text, filter_value):
     df = load_routes()
-    
     if df.empty:
-        return html.P("No routes data available.", style={'color': '#666'})
-    
+        return html.P("No routes data available.", className='text-muted')
+
     if 'yes' in filter_value:
         df = df[df['accessible'] == True]
-    
+
     if search_text:
         search_text = search_text.lower()
         df = df[
             df['start_location'].str.lower().str.contains(search_text) |
             df['end_location'].str.lower().str.contains(search_text)
         ]
-    
+
     return generate_table(df)
 
 @callback(
@@ -235,67 +152,47 @@ def update_table(search_text, filter_value):
 def find_route(n_clicks, start, end, filter_value):
     if not n_clicks:
         return ""
-    
+
     if not start or not end:
-        return html.P("Please select both start and end locations.", style={'color': 'red', 'fontWeight': 'bold'})
-    
+        return html.P("Please select both start and end locations.", className='text-danger fw-bold')
+
     df = load_routes()
-    
     if df.empty:
-        return html.P("No routes data available.", style={'color': 'red'})
-    
+        return html.P("No routes data available.", className='text-danger')
+
     if 'yes' in filter_value:
         df = df[df['accessible'] == True]
-    
+
     direct_routes = df[(df['start_location'] == start) & (df['end_location'] == end)]
-    
     if direct_routes.empty:
         return html.Div([
-            html.H4(f"❌ No direct route found from {start} to {end}", 
-                   style={'color': 'red', 'marginBottom': '10px'}),
-            html.P("Try selecting different locations or remove the 'accessible only' filter.", 
-                  style={'color': '#666'})
+            html.H4(f"❌ No direct route found from {start} to {end}", className='text-danger mb-2'),
+            html.P("Try selecting different locations or remove the 'accessible only' filter.", className='text-muted')
         ])
-    
-    # Find shortest route
+
     shortest_idx = direct_routes['distance_m'].idxmin()
     shortest_route = direct_routes.loc[shortest_idx]
-    
+
     return html.Div([
-        html.H4(f"✅ Route Found: {start} → {end}", 
-               style={'color': GREEN, 'marginBottom': '15px'}),
-        
-        html.Div(
-            style={
-                'backgroundColor': '#f0f8ff',
-                'padding': '15px',
-                'borderRadius': '8px',
-                'marginBottom': '20px',
-                'borderLeft': f'4px solid {GREEN if shortest_route["accessible"] else RED}'
-            },
-            children=[
-                html.H5("🏆 Shortest Route", style={'marginTop': '0', 'color': BLUE}),
+        html.H4(f"✅ Route Found: {start} → {end}", className='text-success mb-3'),
+
+        dbc.Card([
+            dbc.CardBody([
+                html.H5("🏆 Shortest Route", style={'color': BLUE}),
                 html.P(f"📍 Route ID: {shortest_route['id']}"),
                 html.P(f"📏 Distance: {shortest_route['distance_m']} meters"),
                 html.P(f"♿ Accessible: {'✅ Yes' if shortest_route['accessible'] else '❌ No'}"),
-            ]
-        ),
-        
-        
-        html.H5("All Available Routes:", style={'marginBottom': '10px'}),
-        html.Ul(
-            children=[
-                html.Li(
-                    style={'marginBottom': '5px', 'padding': '5px', 'backgroundColor': '#f9f9f9'},
-                    children=[
-                        html.Span(f"Route {row['id']}: ", style={'fontWeight': 'bold'}),
-                        html.Span(f"{row['distance_m']}m"),
-                        html.Span(f" ({'✅ Accessible' if row['accessible'] else '❌ Not Accessible'})", 
-                                style={'color': GREEN if row['accessible'] else RED, 'marginLeft': '10px'})
-                    ]
-                )
-                for _, row in direct_routes.iterrows()
-            ],
-            style={'listStyle': 'none', 'padding': '0'}
-        )
+            ])
+        ], className="mb-3 border-start border-4",
+           style={'borderColor': GREEN if shortest_route['accessible'] else RED}),
+
+        html.H5("All Available Routes:", className='mb-2'),
+        html.Ul([
+            html.Li([
+                html.Span(f"Route {row['id']}: ", className='fw-bold'),
+                html.Span(f"{row['distance_m']}m"),
+                html.Span(f" ({'✅ Accessible' if bool(row['accessible']) else '❌ Not Accessible'})",
+                          style={'color': GREEN if bool(row['accessible']) else RED, 'marginLeft': '10px'})
+            ], className='p-2 bg-light mb-1') for _, row in direct_routes.iterrows()
+        ], className='list-unstyled')
     ])

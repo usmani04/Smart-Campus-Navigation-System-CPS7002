@@ -4,171 +4,153 @@ import pandas as pd
 from dash import html, dcc, Input, Output, State, callback
 from dash.dependencies import ALL
 from dash.exceptions import PreventUpdate
+import dash_bootstrap_components as dbc
 
 CSV_PATH = "data/routes.csv"
+NOTIF_CSV_PATH = "data/notification.csv"
 BLUE = "#2f80ed"
-WHITE = "#ffffff"
-LIGHT = "#f4f9ff"
 
+# ------------------ CSV Read / Write ------------------
 def read_routes():
     if os.path.exists(CSV_PATH):
         return pd.read_csv(CSV_PATH)
     return pd.DataFrame(columns=["id", "start_location", "end_location", "distance_m", "accessible"])
 
-
 def save_routes(df):
     df.to_csv(CSV_PATH, index=False)
 
-def input_style():
-    return {
-        "flex": "1",
-        "padding": "12px",
-        "border": f"2px solid {BLUE}",
-        "borderRadius": "8px"
-    }
+# ------------------ Notification Helper ------------------
+def add_notification(message, user_id=1):
+    if os.path.exists(NOTIF_CSV_PATH):
+        df = pd.read_csv(NOTIF_CSV_PATH)
+    else:
+        df = pd.DataFrame(columns=["id", "user_id", "message", "delivered"])
 
+    new_id = int(df.id.max()) + 1 if not df.empty else 1
 
-def header_style():
-    return {
-        "padding": "12px",
-        "borderBottom": "2px solid #ccc",
-        "background": LIGHT,
-        "textAlign": "left"
-    }
+    df = pd.concat([
+        df,
+        pd.DataFrame([{
+            "id": new_id,
+            "user_id": user_id,
+            "message": message,
+            "delivered": False
+        }])
+    ], ignore_index=True)
 
+    df.to_csv(NOTIF_CSV_PATH, index=False)
 
-def cell_style():
-    return {
-        "padding": "12px",
-        "borderBottom": "1px solid #eee"
-    }
-
-
-def edit_btn_style():
-    return {
-        "background": "#f2c94c",
-        "color": "black",
-        "border": "none",
-        "padding": "4px 10px",
-        "borderRadius": "6px",
-        "cursor": "pointer",
-        "marginRight": "6px"
-    }
-
-
-def delete_btn_style():
-    return {
-        "background": "#eb5757",
-        "color": "white",
-        "border": "none",
-        "padding": "4px 10px",
-        "borderRadius": "6px",
-        "cursor": "pointer"
-    }
-
-
-
+# ------------------ Table ------------------
 def generate_table(df):
     header = html.Tr([
-        html.Th("ID", style=header_style()),
-        html.Th("Start", style=header_style()),
-        html.Th("End", style=header_style()),
-        html.Th("Distance (m)", style=header_style()),
-        html.Th("Accessible", style=header_style()),
-        html.Th("Actions", style=header_style()),
+        html.Th("ID", className="p-2 bg-light border"),
+        html.Th("Start", className="p-2 bg-light border"),
+        html.Th("End", className="p-2 bg-light border"),
+        html.Th("Distance (m)", className="p-2 bg-light border"),
+        html.Th("Accessible", className="p-2 bg-light border"),
+        html.Th("Actions", className="p-2 bg-light border"),
     ])
 
     rows = []
     for _, row in df.iterrows():
+        accessible_text = "✅ Yes" if row.accessible else "❌ No"
+        accessible_color = BLUE if row.accessible else "red"
+
         rows.append(
             html.Tr([
-                html.Td(row.id, style=cell_style()),
-                html.Td(row.start_location, style=cell_style()),
-                html.Td(row.end_location, style=cell_style()),
-                html.Td(row.distance_m, style=cell_style()),
-                html.Td(str(row.accessible), style=cell_style()),
+                html.Td(row.id, className="p-2 border"),
+                html.Td(row.start_location, className="p-2 border"),
+                html.Td(row.end_location, className="p-2 border"),
+                html.Td(row.distance_m, className="p-2 border"),
+                html.Td(
+                    html.Span(accessible_text, style={"color": accessible_color, "fontWeight": "bold"}),
+                    className="p-2 border"
+                ),
                 html.Td([
-                    html.Button("Edit", id={"type": "edit", "index": int(row.id)}, style=edit_btn_style()),
-                    html.Button("Delete", id={"type": "delete", "index": int(row.id)}, style=delete_btn_style())
+                    dbc.Button("Edit", id={"type": "edit", "index": int(row.id)}, color="warning", size="sm", className="me-1"),
+                    dbc.Button("Delete", id={"type": "delete", "index": int(row.id)}, color="danger", size="sm")
                 ])
             ])
         )
 
-    return html.Table([header] + rows, style={"width": "100%", "borderCollapse": "collapse"})
+    return dbc.Table([header] + rows, bordered=False, hover=True, responsive=True, striped=True, className="mb-0")
 
-
-
+# ------------------ Layout ------------------
 def layout():
     df = read_routes()
 
-    return html.Div(style={"padding": "20px"}, children=[
+    return dbc.Container([
 
-        html.Div(style={
-            "background": WHITE,
-            "padding": "25px",
-            "borderRadius": "15px",
-            "marginBottom": "25px"
-        }, children=[
-            html.H3("Add / Edit Route"),
-            dcc.Store(id="edit-id", data=None),
-
-            html.Div(style={"display": "flex", "gap": "15px", "marginBottom": "15px"}, children=[
-                dcc.Input(id="start", placeholder="Start location", value="", style=input_style()),
-                dcc.Input(id="end", placeholder="End location", value="", style=input_style()),
-                dcc.Input(id="distance", type="number", placeholder="Distance (m)", value=None, style=input_style()),
-                dcc.Dropdown(
-                    id="accessible",
-                    options=[
-                        {"label": "Accessible", "value": True},
-                        {"label": "Not Accessible", "value": False},
-                    ],
-                    value=None,
-                    placeholder="Accessible",
-                    style={"flex": "1"}
-                )
-            ]),
-
-            html.Div(style={"textAlign": "right"}, children=[
-                html.Button("Add", id="add-btn", n_clicks=0, style={
-                    "background": BLUE,
-                    "color": "white",
-                    "border": "none",
-                    "padding": "10px 25px",
-                    "borderRadius": "8px"
-                }),
-                html.Button("Reset", id="reset-btn", n_clicks=0, style={
-                    "background": "gray",
-                    "color": "white",
-                    "border": "none",
-                    "padding": "10px 25px",
-                    "borderRadius": "8px",
-                    "marginLeft": "10px"
-                })
-            ]),
-
-            html.Div(id="msg", style={"marginTop": "10px"})
-        ]),
-
-        dcc.Input(
-            id="search",
-            placeholder="Search routes...",
-            value="",
+        # ✅ Toast (ADDED – does not replace msg)
+        dbc.Toast(
+            id="route-toast",
+            header="Success",
+            is_open=False,
+            dismissable=True,
+            duration=3000,
+            icon="success",
             style={
-                "width": "300px",
-                "padding": "12px",
-                "border": f"2px solid {BLUE}",
-                "borderRadius": "8px",
-                "marginBottom": "15px"
+                "position": "fixed",
+                "top": 20,
+                "right": 20,
+                "width": 350,
+                "zIndex": 9999
             }
         ),
 
-        html.Div(id="table", children=generate_table(df))
-    ])
+        dbc.Card([
+            dbc.CardBody([
+                html.H3("Add / Edit Route", className="mb-3"),
+                dcc.Store(id="edit-id", data=None),
 
+                dbc.Row([
+                    dbc.Col(dcc.Input(id="start", placeholder="Start location", value="", className="form-control"), md=3),
+                    dbc.Col(dcc.Input(id="end", placeholder="End location", value="", className="form-control"), md=3),
+                    dbc.Col(dcc.Input(id="distance", type="number", placeholder="Distance (m)", value=None, className="form-control"), md=3),
+                    dbc.Col(dcc.Dropdown(
+                        id="accessible",
+                        options=[
+                            {"label": "Accessible", "value": True},
+                            {"label": "Not Accessible", "value": False},
+                        ],
+                        value=None,
+                        placeholder="Accessible",
+                    ), md=3)
+                ], className="mb-3"),
 
+                dbc.Row([
+                    dbc.Col(dbc.Button("Add", id="add-btn", n_clicks=0, color="primary", className="me-2"), width="auto"),
+                    dbc.Col(dbc.Button("Reset", id="reset-btn", n_clicks=0, color="secondary"), width="auto")
+                ], className="justify-content-end"),
 
+                html.Div(id="msg", className="mt-2")
+            ])
+        ], className="mb-4 shadow-sm"),
+
+        dbc.Card(
+            className="p-3 mb-4 shadow-sm",
+            children=[
+                dbc.Row([
+                    dbc.Col(dcc.Input(
+                        id="search",
+                        placeholder="Search routes...",
+                        value="",
+                        className="form-control mb-3",
+                        style={"maxWidth": "300px"}
+                    ))
+                ]),
+                html.Div(id="table", children=generate_table(df))
+            ]
+        ),
+    ], fluid=True)
+
+# ------------------ Callbacks ------------------
+
+# Delete
 @callback(
     Output("table", "children", allow_duplicate=True),
+    Output("route-toast", "children", allow_duplicate=True),
+    Output("route-toast", "is_open", allow_duplicate=True),
     Input({"type": "delete", "index": ALL}, "n_clicks"),
     prevent_initial_call=True
 )
@@ -176,15 +158,19 @@ def delete_route(clicks):
     if not any(clicks):
         raise PreventUpdate
 
-    ctx = dash.callback_context
-    route_id = ctx.triggered_id["index"]
+    route_id = dash.callback_context.triggered_id["index"]
 
     df = read_routes()
+    r = df[df.id == route_id].iloc[0]
+
     df = df[df.id != route_id]
     save_routes(df)
-    return generate_table(df)
 
+    add_notification(f"Route '{r.start_location} → {r.end_location}' deleted")
 
+    return generate_table(df), "Route deleted successfully", True
+
+# Edit
 @callback(
     Output("start", "value", allow_duplicate=True),
     Output("end", "value", allow_duplicate=True),
@@ -199,15 +185,13 @@ def edit_route(clicks):
     if not any(clicks):
         raise PreventUpdate
 
-    ctx = dash.callback_context
-    route_id = ctx.triggered_id["index"]
-
+    route_id = dash.callback_context.triggered_id["index"]
     df = read_routes()
     r = df[df.id == route_id].iloc[0]
 
     return r.start_location, r.end_location, r.distance_m, r.accessible, "Update", route_id
 
-
+# Reset
 @callback(
     Output("start", "value", allow_duplicate=True),
     Output("end", "value", allow_duplicate=True),
@@ -222,10 +206,12 @@ def edit_route(clicks):
 def reset_form(_):
     return "", "", None, None, "Add", None, ""
 
-
+# Add / Update
 @callback(
     Output("table", "children", allow_duplicate=True),
     Output("msg", "children"),
+    Output("route-toast", "children", allow_duplicate=True),
+    Output("route-toast", "is_open", allow_duplicate=True),
     Input("add-btn", "n_clicks"),
     State("start", "value"),
     State("end", "value"),
@@ -236,13 +222,14 @@ def reset_form(_):
 )
 def save_route(_, s, e, d, a, edit_id):
     if not all([s, e]) or d is None or a is None:
-        return dash.no_update, "Please fill all fields"
+        return dash.no_update, "Please fill all fields", dash.no_update, False
 
     df = read_routes()
 
     if edit_id is not None:
         df.loc[df.id == edit_id, ["start_location", "end_location", "distance_m", "accessible"]] = [s, e, d, a]
         msg = "Route updated"
+        add_notification(f"Route '{s} → {e}' updated")
     else:
         new_id = int(df.id.max()) + 1 if not df.empty else 1
         df = pd.concat([
@@ -256,11 +243,12 @@ def save_route(_, s, e, d, a, edit_id):
             }])
         ], ignore_index=True)
         msg = "Route added"
+        add_notification(f"New route '{s} → {e}' added")
 
     save_routes(df)
-    return generate_table(df), msg
+    return generate_table(df), msg, msg, True
 
-
+# Search
 @callback(
     Output("table", "children", allow_duplicate=True),
     Input("search", "value"),
@@ -274,5 +262,3 @@ def search_routes(text):
     t = text.lower()
     df = df[df.apply(lambda r: t in str(r).lower(), axis=1)]
     return generate_table(df)
-
-

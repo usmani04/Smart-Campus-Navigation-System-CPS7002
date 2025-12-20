@@ -4,6 +4,7 @@ import dash
 import pandas as pd
 from dash import html, dcc, Input, Output, State, callback
 from dash.dependencies import ALL
+import dash_bootstrap_components as dbc
 
 BLUE = "#0B63C5"
 WHITE = "#FFFFFF"
@@ -15,188 +16,125 @@ def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
 
-def table_header_style():
-    return {
-        "padding": "12px",
-        "borderBottom": "2px solid #ccc",
-        "textAlign": "left",
-        "backgroundColor": LIGHT
-    }
+# -------------------
+# Table Buttons Classes
+# -------------------
+def btn_class(color="primary"):
+    return f"btn btn-sm btn-{color} me-1 cursor-pointer"
 
 
-def cell_style():
-    return {
-        "padding": "10px 14px",
-        "borderBottom": "1px solid #eee"
-    }
-
-
-def edit_btn_style():
-    return {
-        "backgroundColor": "#FFA500",
-        "color": "white",
-        "border": "none",
-        "padding": "4px 10px",
-        "marginRight": "5px",
-        "borderRadius": "5px",
-        "cursor": "pointer"
-    }
-
-
-def delete_btn_style():
-    return {
-        "backgroundColor": "red",
-        "color": "white",
-        "border": "none",
-        "padding": "4px 10px",
-        "borderRadius": "5px",
-        "cursor": "pointer"
-    }
-
-
+# -------------------
+# Generate User Table
+# -------------------
 def generate_user_table(df):
     header = html.Tr(
-        [html.Th(col, style=table_header_style()) for col in df.columns] +
-        [html.Th("Actions", style=table_header_style())]
+        [html.Th(col, className="p-2 border-bottom") for col in df.columns] +
+        [html.Th("Actions", className="p-2 border-bottom")]
     )
 
     rows = []
     for i in range(len(df)):
         rows.append(
             html.Tr(
-                [html.Td(df.iloc[i][col], style=cell_style()) for col in df.columns] +
+                [html.Td(df.iloc[i][col], className="p-2") for col in df.columns] +
                 [
                     html.Td([
-                        html.Button(
+                        dbc.Button(
                             "Edit",
                             id={"type": "edit-btn", "index": i},
                             n_clicks=0,
-                            style=edit_btn_style()
+                            color="warning",
+                            size="sm",
+                            className="me-1"
                         ),
-                        html.Button(
+                        dbc.Button(
                             "Delete",
                             id={"type": "delete-btn", "index": i},
                             n_clicks=0,
-                            style=delete_btn_style()
+                            color="danger",
+                            size="sm"
                         )
                     ])
                 ],
-                style={"backgroundColor": "#FAFAFA" if i % 2 == 0 else WHITE}
+                className="bg-light" if i % 2 == 0 else ""
             )
         )
 
-    return html.Table(
+    return dbc.Table(
         [header] + rows,
-        style={
-            "width": "100%",
-            "borderCollapse": "collapse",
-            "borderRadius": "10px",
-            "overflow": "hidden",
-            "boxShadow": "0 2px 8px rgba(0,0,0,0.1)"
-        }
+        bordered=False,
+        hover=True,
+        responsive=True,
+        striped=False,
+        className="shadow-sm rounded"
     )
 
 
+# -------------------
+# Layout
+# -------------------
 def layout():
     if os.path.exists(CSV_PATH):
-        df = pd.read_csv(
-            CSV_PATH,
-            usecols=["username", "email", "role", "password"]
-        )
+        df = pd.read_csv(CSV_PATH, usecols=["username", "email", "role", "password"])
     else:
         df = pd.DataFrame(columns=["username", "email", "role", "password"])
 
     df_display = df.drop(columns=["password"])
 
-    input_style = {
-        "flex": "1",
-        "minWidth": "200px",
-        "padding": "10px",
-        "border": f"2px solid {BLUE}",
-        "borderRadius": "6px"
-    }
-
-    return html.Div(
-        style={"padding": "30px", "backgroundColor": LIGHT, "minHeight": "100vh"},
+    return dbc.Container(
+        fluid=True,
+        className="p-4",
+        style={"backgroundColor": LIGHT, "minHeight": "100vh"},
         children=[
-            html.H2("👥 Manage Users", style={"color": BLUE, "marginBottom": "20px"}),
+            html.H2("👥 Manage Users", className="text-primary mb-4"),
 
-            html.Div(
-                style={
-                    "marginBottom": "30px",
-                    "padding": "20px",
-                    "backgroundColor": WHITE,
-                    "borderRadius": "10px",
-                    "boxShadow": "0 2px 8px rgba(0,0,0,0.1)"
-                },
+            dbc.Card(
+                className="p-3 mb-4 shadow-sm",
                 children=[
                     html.H4("Add / Edit User"),
                     dcc.Store(id="edit-index"),
 
-                    html.Div(
-                        style={"display": "flex", "gap": "10px", "flexWrap": "wrap"},
+                    dbc.Row(
+                        className="g-2",
                         children=[
-                            dcc.Input(id="input-username", placeholder="Username", style=input_style),
-                            dcc.Input(id="input-email", type="email", placeholder="Email", style=input_style),
-                            dcc.Dropdown(
+                            dbc.Col(dcc.Input(id="input-username", placeholder="Username", className="form-control"), className="col-md-2"),
+                            dbc.Col(dcc.Input(id="input-email", type="email", placeholder="Email", className="form-control"), className="col-md-2"),
+                            dbc.Col(dcc.Dropdown(
                                 id="input-role",
-                                options=[
-                                    {"label": r, "value": r}
-                                    for r in ["student", "staff", "admin", "visitor"]
-                                ],
+                                options=[{"label": r, "value": r} for r in ["student", "staff", "admin", "visitor"]],
                                 placeholder="Select role",
-                                style={"flex": "1", "minWidth": "200px"}
-                            ),
-                            dcc.Input(id="input-password", type="password", placeholder="Password", style=input_style),
-
-                            html.Button(
-                                "Add",
-                                id="btn-add-user",
-                                n_clicks=0,
-                                style={
-                                    "backgroundColor": BLUE,
-                                    "color": WHITE,
-                                    "border": "none",
-                                    "padding": "10px 15px",
-                                    "borderRadius": "6px"
-                                }
-                            ),
-                            html.Button(
-                                "Reset",
-                                id="btn-cancel-edit",
-                                n_clicks=0,
-                                style={
-                                    "backgroundColor": "#777",
-                                    "color": WHITE,
-                                    "border": "none",
-                                    "padding": "10px 15px",
-                                    "borderRadius": "6px"
-                                }
-                            ),
+                                className=""
+                            ), className="col-md-2"),
+                            dbc.Col(dcc.Input(id="input-password", type="password", placeholder="Password", className="form-control"), className="col-md-2"),
+                            dbc.Col(dbc.Button("Add", id="btn-add-user", color="primary", className="me-1"), width="auto"),
+                            dbc.Col(dbc.Button("Reset", id="btn-cancel-edit", color="secondary"), width="auto"),
                         ]
                     ),
-
-                    html.Div(id="add-user-msg", style={"marginTop": "10px"})
+                    html.Div(id="add-user-msg", className="mt-2")
                 ]
             ),
 
-            dcc.Input(
-                id="search-input",
-                placeholder="Search users...",
-                style={
-                    "padding": "10px",
-                    "width": "300px",
-                    "border": f"2px solid {BLUE}",
-                    "borderRadius": "6px",
-                    "marginBottom": "20px"
-                }
+            dbc.Row(
+                className="mb-3 g-2",
+                children=[
+                    dbc.Col(dcc.Input(id="search-input", placeholder="Search users...", className="form-control", type="text"), width="auto")
+                ]
             ),
 
-            html.Div(id="user-table-div", children=generate_user_table(df_display))
+            dbc.Card(
+                className="p-3 mb-4 shadow-sm",
+                children=[
+                    html.Div(id="user-table-div", children=generate_user_table(df_display))
+                ]
+            ),
+
         ]
     )
 
 
+# -------------------
+# Callbacks
+# -------------------
 @callback(
     Output("user-table-div", "children", allow_duplicate=True),
     Input({"type": "delete-btn", "index": ALL}, "n_clicks"),
@@ -205,12 +143,10 @@ def layout():
 def delete_user(clicks):
     if not any(clicks):
         raise dash.exceptions.PreventUpdate
-
     index = clicks.index(max(clicks))
     df = pd.read_csv(CSV_PATH, usecols=["username", "email", "role", "password"])
     df = df.drop(index).reset_index(drop=True)
     df.to_csv(CSV_PATH, index=False)
-
     return generate_user_table(df.drop(columns=["password"]))
 
 
@@ -227,11 +163,9 @@ def delete_user(clicks):
 def load_user(clicks):
     if not any(clicks):
         raise dash.exceptions.PreventUpdate
-
     index = clicks.index(max(clicks))
     df = pd.read_csv(CSV_PATH, usecols=["username", "email", "role", "password"])
     user = df.iloc[index]
-
     return user["username"], user["email"], user["role"], "", "Update", index
 
 
@@ -264,9 +198,7 @@ def cancel_edit(_):
 def save_user(_, username, email, role, password, edit_index):
     if not all([username, email, role]):
         return dash.no_update, "Please fill all required fields."
-
     df = pd.read_csv(CSV_PATH, usecols=["username", "email", "role", "password"])
-
     if edit_index is not None:
         df.loc[edit_index, ["username", "email", "role"]] = [username, email, role]
         if password:
@@ -283,7 +215,6 @@ def save_user(_, username, email, role, password, edit_index):
             }])
         ], ignore_index=True)
         message = f"User '{username}' added."
-
     df.to_csv(CSV_PATH, index=False)
     return generate_user_table(df.drop(columns=["password"])), message
 
@@ -296,19 +227,16 @@ def save_user(_, username, email, role, password, edit_index):
 def search_users(text):
     df = pd.read_csv(CSV_PATH, usecols=["username", "email", "role", "password"])
     df_display = df.drop(columns=["password"])
-
     if not text:
         return generate_user_table(df_display)
-
     text = text.lower()
     filtered = df_display[
         df_display.apply(lambda r: r.astype(str).str.lower().str.contains(text).any(), axis=1)
     ]
-
     return generate_user_table(filtered)
 
 
 if __name__ == "__main__":
-    app = dash.Dash(__name__)
+    app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
     app.layout = layout()
     app.run_server(debug=True)
