@@ -199,6 +199,8 @@ id,name,building,floor,accessible
 198,"Mcgrath, Hayes and Lambert",Commons,1,False
 199,Garcia PLC,Engineering,1,False
 200,Smith-Pruitt,Recreation,5,False
-201,200,tokyo towers main,4,True
-202,200,sky scappers,66,False
-203,frgh,sky scappers2,69,True
+201,Lab,main,2,True
+202,Lab,main,2,True
+203,Lab,main,2,True
+204,Lab,main,2,True
+205,Lab,main,2,True

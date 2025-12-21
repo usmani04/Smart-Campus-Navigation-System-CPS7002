@@ -204,3 +204,9 @@ id,user_id,message,delivered
 203,1,New route 'Gym → Library' added,False
 204,1,New route 'dd → ss' added,False
 205,23,hhjsf,True
+206,1,Route 'Gym → Library' deleted,False
+207,1,"New location '('main', '2')' added",False
+208,1,"New location '('main', '2')' added",False
+209,1,"New location '('main', '2')' added",False
+210,1,"New location '('main', '2')' added",False
+211,1,"New location '('main', '2')' added",False

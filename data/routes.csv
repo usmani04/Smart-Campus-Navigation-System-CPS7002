@@ -1,5 +1,6 @@
 id,start_location,end_location,distance_m,accessible
-3,Gymmm,rdftgyhuj,189,False
+2,Gym,Library,57,False
+3,Gym,Library,189,False
 4,Library,Cafeteria,291,True
 5,Cafeteria,Lecture Hall A,59,True
 6,Gym,Library,490,False
@@ -197,7 +198,3 @@ id,start_location,end_location,distance_m,accessible
 198,Cafeteria,Library,470,True
 199,Library,Cafeteria,476,False
 200,Gym,Lecture Hall A,390,False
-201,zaeem,tt,12,True
-202,Gym,Library,66,True
-203,Gym,Library,5555,True
-204,dd,ss,23,True

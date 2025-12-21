@@ -16,16 +16,12 @@ def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
 
-# -------------------
-# Table Buttons Classes
-# -------------------
+
 def btn_class(color="primary"):
     return f"btn btn-sm btn-{color} me-1 cursor-pointer"
 
 
-# -------------------
-# Generate User Table
-# -------------------
+
 def generate_user_table(df):
     header = html.Tr(
         [html.Th(col, className="p-2 border-bottom") for col in df.columns] +
@@ -70,9 +66,7 @@ def generate_user_table(df):
     )
 
 
-# -------------------
-# Layout
-# -------------------
+
 def layout():
     if os.path.exists(CSV_PATH):
         df = pd.read_csv(CSV_PATH, usecols=["username", "email", "role", "password"])
@@ -132,9 +126,6 @@ def layout():
     )
 
 
-# -------------------
-# Callbacks
-# -------------------
 @callback(
     Output("user-table-div", "children", allow_duplicate=True),
     Input({"type": "delete-btn", "index": ALL}, "n_clicks"),
