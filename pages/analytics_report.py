@@ -2,18 +2,41 @@ import matplotlib
 matplotlib.use("Agg")
 
 import matplotlib.pyplot as plt
-import pandas as pd
+import csv
+import collections
 import io
 import base64
 from dash import html
 
 
 def load_locations():
-    return pd.read_csv("data/locations.csv")
+    locations = []
+    with open("data/locations.csv", 'r', newline='') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            locations.append({
+                'id': int(row['id']),
+                'name': row['name'],
+                'building': row['building'],
+                'floor': int(row['floor']),
+                'accessible': row['accessible'].lower() == 'true'
+            })
+    return locations
 
 
 def load_routes():
-    return pd.read_csv("data/routes.csv")
+    routes = []
+    with open("data/routes.csv", 'r', newline='') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            routes.append({
+                'id': int(row['id']),
+                'start_location': row['start_location'],
+                'end_location': row['end_location'],
+                'distance_m': float(row['distance_m']),
+                'accessible': row['accessible'].lower() == 'true'
+            })
+    return routes
 
 
 def fig_to_base64():
@@ -25,64 +48,64 @@ def fig_to_base64():
     return "data:image/png;base64," + base64.b64encode(buffer.read()).decode()
 
 
-def bar_visits_per_building(df):
-    counts = df["building"].value_counts()
+def bar_visits_per_building(locations):
+    counts = collections.Counter([loc['building'] for loc in locations])
     plt.figure(figsize=(6, 4))
-    plt.bar(counts.index, counts.values)
+    plt.bar(counts.keys(), counts.values())
     plt.title("Visits per Building")
     plt.xlabel("Building")
-    plt.ylabel("Visit Count")
+    plt.ylabel("Count")
     return fig_to_base64()
 
 
-def pie_visits_per_building(df):
-    counts = df["building"].value_counts()
+def pie_visits_per_building(locations):
+    counts = collections.Counter([loc['building'] for loc in locations])
     plt.figure(figsize=(6, 4))
-    plt.pie(counts.values, labels=counts.index, autopct="%1.1f%%")
+    plt.pie(counts.values(), labels=counts.keys(), autopct="%1.1f%%")
     plt.title("Visit Share by Building")
     return fig_to_base64()
 
 
-def line_visits_over_floors(df):
-    counts = df.groupby("floor").size()
+def line_visits_over_floors(locations):
+    counts = collections.Counter([loc['floor'] for loc in locations])
+    floors = sorted(counts.keys())
+    values = [counts[f] for f in floors]
     plt.figure(figsize=(6, 4))
-    plt.plot(counts.index, counts.values, marker="o")
+    plt.plot(floors, values, marker="o")
     plt.title("Visit Trend by Floor")
     plt.xlabel("Floor")
     plt.ylabel("Visits")
     return fig_to_base64()
 
 
-def heatmap_routes(df):
-    pivot = pd.pivot_table(
-        df,
-        index="start_location",
-        columns="end_location",
-        values="id",
-        aggfunc="count",
-        fill_value=0,
-    )
+def heatmap_routes(routes):
+    locations = sorted(set([r['start_location'] for r in routes] + [r['end_location'] for r in routes]))
+    matrix = [[0 for _ in locations] for _ in locations]
+    for r in routes:
+        i = locations.index(r['start_location'])
+        j = locations.index(r['end_location'])
+        matrix[i][j] += 1
     plt.figure(figsize=(6, 4))
-    plt.imshow(pivot, cmap="Blues")
+    plt.imshow(matrix, cmap="Blues")
     plt.colorbar(label="Route Usage")
-    plt.xticks(range(len(pivot.columns)), pivot.columns, rotation=45)
-    plt.yticks(range(len(pivot.index)), pivot.index)
+    plt.xticks(range(len(locations)), locations, rotation=45)
+    plt.yticks(range(len(locations)), locations)
     plt.title("Route Crowdedness Heatmap")
     return fig_to_base64()
 
 
-def scatter_distance_vs_route(df):
+def scatter_distance_vs_route(routes):
     plt.figure(figsize=(6, 4))
-    plt.scatter(df["distance_m"], df.index)
+    plt.scatter([r['distance_m'] for r in routes], list(range(len(routes))))
     plt.title("Route Distance Distribution")
     plt.xlabel("Distance (meters)")
     plt.ylabel("Route Index")
     return fig_to_base64()
 
 
-def histogram_distance(df):
+def histogram_distance(routes):
     plt.figure(figsize=(6, 4))
-    plt.hist(df["distance_m"], bins=5)
+    plt.hist([r['distance_m'] for r in routes], bins=5)
     plt.title("Route Distance Histogram")
     plt.xlabel("Distance (meters)")
     plt.ylabel("Frequency")

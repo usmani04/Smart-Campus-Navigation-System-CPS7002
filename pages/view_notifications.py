@@ -4,18 +4,18 @@ import pandas as pd
 from dash import html, dcc, Input, Output, callback
 import dash_bootstrap_components as dbc
 
-# ------------------ Config ------------------
+
 NOTIF_CSV_PATH = "data/notification.csv"
 BLUE = "#2f80ed"
 
-# ------------------ CSV Read / Write ------------------
+
 def read_notifications():
     if os.path.exists(NOTIF_CSV_PATH):
         return pd.read_csv(NOTIF_CSV_PATH)
     return pd.DataFrame(columns=["id", "user_id", "message", "delivered"])
 
 
-# ------------------ Table Generation ------------------
+
 def generate_notifications_table(df):
     header = html.Tr([
         html.Th("ID", className="p-2 bg-light border"),
@@ -54,13 +54,13 @@ def generate_notifications_table(df):
     )
 
 
-# ------------------ Layout ------------------
+
 def layout():
     df = read_notifications()
 
     return dbc.Container([
 
-        # Search Input
+        
         dbc.Card(
             className="p-3 mb-4 shadow-sm",
             children=[
@@ -75,7 +75,7 @@ def layout():
                         )
                     )
                 ]),
-                # Table
+             
                 html.Div(id="table-notif", children=generate_notifications_table(df))
             ]
         ),
@@ -83,7 +83,7 @@ def layout():
     ], fluid=True)
 
 
-# ------------------ Callbacks ------------------
+
 @callback(
     Output("table-notif", "children"),
     Input("search-notif", "value")

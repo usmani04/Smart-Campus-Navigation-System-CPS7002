@@ -21,7 +21,7 @@ def layout():
     return dbc.Container([
         html.H1("📍 Campus Route Finder", className="my-4", style={'color': BLUE}),
 
-        # Find Route Card
+        
         dbc.Card([
             dbc.CardBody([
                 html.H3("Find Route", className="mb-4", style={'color': BLUE}),
@@ -63,7 +63,7 @@ def layout():
             ])
         ], className="mb-4 shadow-sm"),
 
-        # All Routes Table Card
+       
         dbc.Card([
             dbc.CardBody([
                 dbc.Row([
@@ -118,7 +118,7 @@ def generate_table(df):
 
     return dbc.Table([header] + rows, bordered=False, hover=True, responsive=True, striped=True, className="mb-0")
 
-# Callbacks
+
 
 @callback(
     Output('routes-table', 'children'),

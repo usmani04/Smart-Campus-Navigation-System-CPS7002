@@ -1,20 +1,27 @@
 import os
-import dash
-import pandas as pd
+import csv
 from dash import html, dcc, Input, Output, callback
 import dash_bootstrap_components as dbc
 
 CSV_PATH = "data/routes.csv"
 BLUE = "#2f80ed"
 
-# ------------------ CSV Read ------------------
 def read_routes():
+    routes = []
     if os.path.exists(CSV_PATH):
-        return pd.read_csv(CSV_PATH)
-    return pd.DataFrame(columns=["id", "start_location", "end_location", "distance_m", "accessible"])
+        with open(CSV_PATH, 'r', newline='') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                routes.append({
+                    'id': int(row['id']),
+                    'start_location': row['start_location'],
+                    'end_location': row['end_location'],
+                    'distance_m': float(row['distance_m']),
+                    'accessible': row['accessible'].lower() == 'true'
+                })
+    return routes
 
-# ------------------ Table Generation ------------------
-def generate_routes_table(df):
+def generate_routes_table(routes):
     header = html.Tr([
         html.Th("ID", className="p-2 bg-light border"),
         html.Th("Start", className="p-2 bg-light border"),
@@ -24,28 +31,28 @@ def generate_routes_table(df):
     ])
 
     rows = []
-    for _, row in df.iterrows():
-        accessible_text = "✅ Yes" if row.accessible else "❌ No"
-        accessible_color = BLUE if row.accessible else "red"
+    for r in routes:
+        accessible_text = "✅ Yes" if r['accessible'] else "❌ No"
+        accessible_color = BLUE if r['accessible'] else "red"
 
         rows.append(
             html.Tr([
-                html.Td(row.id, className="p-2 border"),
-                html.Td(row.start_location, className="p-2 border"),
-                html.Td(row.end_location, className="p-2 border"),
-                html.Td(row.distance_m, className="p-2 border"),
+                html.Td(r['id'], className="p-2 border"),
+                html.Td(r['start_location'], className="p-2 border"),
+                html.Td(r['end_location'], className="p-2 border"),
+                html.Td(r['distance_m'], className="p-2 border"),
                 html.Td(html.Span(accessible_text, style={'color': accessible_color, 'fontWeight': 'bold'}), className="p-2 border"),
             ])
         )
 
     return dbc.Table([header] + rows, bordered=False, hover=True, responsive=True, striped=True, className="mb-0")
 
-# ------------------ Layout ------------------
+
 def view_routes_layout():
-    df = read_routes()
+    routes = read_routes()
     return dbc.Container([
 
-        # Search
+
         dbc.Card(
             className="p-3 mb-4 shadow-sm",
             children=[
@@ -60,23 +67,23 @@ def view_routes_layout():
                         )
                     )
                 ]),
-                # Table
-                html.Div(id="table-routes", children=generate_routes_table(df))
+              
+                html.Div(id="table-routes", children=generate_routes_table(routes))
             ]
         ),
 
     ], fluid=True)
 
-# ------------------ Callbacks ------------------
+
 @callback(
     Output("table-routes", "children"),
     Input("search-routes", "value"),
     prevent_initial_call=True
 )
 def search_routes(text):
-    df = read_routes()
+    routes = read_routes()
     if not text:
-        return generate_routes_table(df)
+        return generate_routes_table(routes)
     t = text.lower()
-    df = df[df.apply(lambda r: t in str(r).lower(), axis=1)]
-    return generate_routes_table(df)
+    filtered = [r for r in routes if t in str(r).lower()]
+    return generate_routes_table(filtered)

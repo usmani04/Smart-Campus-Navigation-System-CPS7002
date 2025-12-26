@@ -1,48 +1,69 @@
 import os
+import csv
 import dash
-import pandas as pd
 from dash import html, dcc, Input, Output, State, callback
 from dash.dependencies import ALL
 from dash.exceptions import PreventUpdate
 import dash_bootstrap_components as dbc
 
-# ------------------ Config ------------------
 LOC_CSV_PATH = "data/locations.csv"
 NOTIF_CSV_PATH = "data/notification.csv"
 BLUE = "#2f80ed"
 
-# ------------------ CSV Read/Write ------------------
 def read_locations():
+    locations = []
     if os.path.exists(LOC_CSV_PATH):
-        return pd.read_csv(LOC_CSV_PATH)
-    return pd.DataFrame(columns=["id", "name", "building", "floor", "accessible"])
+        with open(LOC_CSV_PATH, 'r', newline='') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                locations.append({
+                    'id': int(row['id']),
+                    'name': row['name'],
+                    'building': row['building'],
+                    'floor': int(row['floor']),
+                    'accessible': row['accessible'].lower() == 'true'
+                })
+    return locations
 
-def save_locations(df):
-    df.to_csv(LOC_CSV_PATH, index=False)
+def save_locations(locations):
+    with open(LOC_CSV_PATH, 'w', newline='') as f:
+        if locations:
+            writer = csv.DictWriter(f, fieldnames=locations[0].keys())
+            writer.writeheader()
+            for loc in locations:
+                loc_copy = loc.copy()
+                loc_copy['accessible'] = str(loc_copy['accessible'])
+                writer.writerow(loc_copy)
 
-# ------------------ Notification Helper ------------------
 def add_notification(message, user_id=1):
+    notifications = []
     if os.path.exists(NOTIF_CSV_PATH):
-        df = pd.read_csv(NOTIF_CSV_PATH)
-    else:
-        df = pd.DataFrame(columns=["id", "user_id", "message", "delivered"])
+        with open(NOTIF_CSV_PATH, 'r', newline='') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                notifications.append({
+                    'id': int(row['id']),
+                    'user_id': int(row['user_id']),
+                    'message': row['message'],
+                    'delivered': row['delivered'].lower() == 'true'
+                })
+    new_id = max([n['id'] for n in notifications], default=0) + 1
+    notifications.append({
+        'id': new_id,
+        'user_id': user_id,
+        'message': message,
+        'delivered': False
+    })
+    with open(NOTIF_CSV_PATH, 'w', newline='') as f:
+        if notifications:
+            writer = csv.DictWriter(f, fieldnames=notifications[0].keys())
+            writer.writeheader()
+            for n in notifications:
+                n_copy = n.copy()
+                n_copy['delivered'] = str(n_copy['delivered'])
+                writer.writerow(n_copy)
 
-    new_id = int(df.id.max()) + 1 if not df.empty else 1
-
-    df = pd.concat([
-        df,
-        pd.DataFrame([{
-            "id": new_id,
-            "user_id": user_id,
-            "message": message,
-            "delivered": False
-        }])
-    ], ignore_index=True)
-
-    df.to_csv(NOTIF_CSV_PATH, index=False)
-
-# ------------------ Table Generation ------------------
-def generate_locations_table(df):
+def generate_locations_table(locations):
     header = html.Tr([
         html.Th("ID", className="p-2 bg-light border"),
         html.Th("Name", className="p-2 bg-light border"),
@@ -53,16 +74,22 @@ def generate_locations_table(df):
     ])
 
     rows = []
-    for _, row in df.iterrows():
-        accessible_text = "✅ Yes" if row.accessible else "❌ No"
-        accessible_color = BLUE if row.accessible else "red"
+    for loc in locations:
+        id_val = loc["id"]
+        name_val = loc["name"]
+        building_val = loc["building"]
+        floor_val = loc["floor"]
+        accessible_val = loc["accessible"]
+
+        accessible_text = "✅ Yes" if accessible_val else "❌ No"
+        accessible_color = BLUE if accessible_val else "red"
 
         rows.append(
             html.Tr([
-                html.Td(row.id, className="p-2 border"),
-                html.Td(row.name, className="p-2 border"),
-                html.Td(row.building, className="p-2 border"),
-                html.Td(row.floor, className="p-2 border"),
+                html.Td(id_val, className="p-2 border"),
+                html.Td(name_val, className="p-2 border"),
+                html.Td(building_val, className="p-2 border"),
+                html.Td(floor_val, className="p-2 border"),
                 html.Td(
                     html.Span(
                         accessible_text,
@@ -73,14 +100,14 @@ def generate_locations_table(df):
                 html.Td([
                     dbc.Button(
                         "Edit",
-                        id={"type": "edit-loc", "index": int(row.id)},
+                        id={"type": "edit-loc", "index": id_val},
                         color="warning",
                         size="sm",
                         className="me-1"
                     ),
                     dbc.Button(
                         "Delete",
-                        id={"type": "delete-loc", "index": int(row.id)},
+                        id={"type": "delete-loc", "index": id_val},
                         color="danger",
                         size="sm"
                     )
@@ -97,9 +124,8 @@ def generate_locations_table(df):
         className="mb-0"
     )
 
-# ------------------ Layout ------------------
 def locations_layout():
-    df = read_locations()
+    locations = read_locations()
 
     return dbc.Container([
 
@@ -152,7 +178,7 @@ def locations_layout():
                 dbc.Row([
                     dbc.Col(
                         dcc.Input(
-                            id="search-loc",
+                            id="manage-search-loc",
                             placeholder="Search locations...",
                             value="",
                             className="form-control mb-3",
@@ -160,17 +186,14 @@ def locations_layout():
                         )
                     )
                 ]),
-                html.Div(id="table-loc", children=generate_locations_table(df))
+                html.Div(id="manage-table-loc", children=generate_locations_table(locations))
             ]
         ),
 
     ], fluid=True)
 
-# ------------------ Callbacks ------------------
-
-# Delete
 @callback(
-    Output("table-loc", "children", allow_duplicate=True),
+    Output("manage-table-loc", "children", allow_duplicate=True),
     Output("loc-toast", "children", allow_duplicate=True),
     Output("loc-toast", "is_open", allow_duplicate=True),
     Input({"type": "delete-loc", "index": ALL}, "n_clicks"),
@@ -182,17 +205,16 @@ def delete_location(clicks):
 
     loc_id = dash.callback_context.triggered_id["index"]
 
-    df = read_locations()
-    loc_name = df[df.id == loc_id]["name"].values[0]
+    locations = read_locations()
+    loc_name = next(loc['name'] for loc in locations if loc['id'] == loc_id)
 
-    df = df[df.id != loc_id]
-    save_locations(df)
+    locations = [loc for loc in locations if loc['id'] != loc_id]
+    save_locations(locations)
 
     add_notification(f"Location '{loc_name}' deleted")
 
-    return generate_locations_table(df), "Location deleted successfully", True
+    return generate_locations_table(locations), "Location deleted successfully", True
 
-# Edit
 @callback(
     Output("loc-name", "value", allow_duplicate=True),
     Output("loc-building", "value", allow_duplicate=True),
@@ -208,12 +230,11 @@ def edit_location(clicks):
         raise PreventUpdate
 
     loc_id = dash.callback_context.triggered_id["index"]
-    df = read_locations()
-    r = df[df.id == loc_id].iloc[0]
+    locations = read_locations()
+    r = next(loc for loc in locations if loc['id'] == loc_id)
 
-    return r.name, r.building, r.floor, r.accessible, "Update", loc_id
+    return r["name"], r["building"], r["floor"], r["accessible"], "Update", loc_id
 
-# Reset
 @callback(
     Output("loc-name", "value", allow_duplicate=True),
     Output("loc-building", "value", allow_duplicate=True),
@@ -227,9 +248,8 @@ def edit_location(clicks):
 def reset_loc_form(_):
     return "", "", "", None, "Add", None
 
-# Add / Update
 @callback(
-    Output("table-loc", "children", allow_duplicate=True),
+    Output("manage-table-loc", "children", allow_duplicate=True),
     Output("loc-toast", "children", allow_duplicate=True),
     Output("loc-toast", "is_open", allow_duplicate=True),
     Input("add-loc-btn", "n_clicks"),
@@ -244,44 +264,41 @@ def save_location(_, name, building, floor, accessible, edit_id):
     if not all([name, building, floor]) or accessible is None:
         raise PreventUpdate
 
-    df = read_locations()
+    locations = read_locations()
 
     if edit_id is not None:
-        df.loc[df.id == edit_id, ["name", "building", "floor", "accessible"]] = [
-            name, building, floor, accessible
-        ]
+        for loc in locations:
+            if loc['id'] == edit_id:
+                loc.update({'name': name, 'building': building, 'floor': int(floor), 'accessible': accessible})
+                break
         msg = "Location updated successfully"
         add_notification(f"Location '{name}' updated")
     else:
-        new_id = int(df.id.max()) + 1 if not df.empty else 1
-        df = pd.concat([
-            df,
-            pd.DataFrame([{
-                "id": new_id,
-                "name": name,
-                "building": building,
-                "floor": floor,
-                "accessible": accessible
-            }])
-        ], ignore_index=True)
+        new_id = max([loc['id'] for loc in locations], default=0) + 1
+        locations.append({
+            'id': new_id,
+            'name': name,
+            'building': building,
+            'floor': int(floor),
+            'accessible': accessible
+        })
         msg = "Location added successfully"
-        add_notification(f"New location '{building, floor}' added")
+        add_notification(f"New location '{building}, {floor}' added")
 
-    save_locations(df)
+    save_locations(locations)
 
-    return generate_locations_table(df), msg, True
+    return generate_locations_table(locations), msg, True
 
-# Search
 @callback(
-    Output("table-loc", "children", allow_duplicate=True),
-    Input("search-loc", "value"),
+    Output("manage-table-loc", "children", allow_duplicate=True),
+    Input("manage-search-loc", "value"),
     prevent_initial_call=True
 )
 def search_locations(text):
-    df = read_locations()
+    locations = read_locations()
     if not text:
-        return generate_locations_table(df)
+        return generate_locations_table(locations)
 
     t = text.lower()
-    df = df[df.apply(lambda r: t in str(r).lower(), axis=1)]
-    return generate_locations_table(df)
+    filtered = [loc for loc in locations if t in str(loc).lower()]
+    return generate_locations_table(filtered)

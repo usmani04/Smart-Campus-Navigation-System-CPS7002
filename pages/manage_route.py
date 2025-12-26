@@ -1,6 +1,6 @@
 import os
+import csv
 import dash
-import pandas as pd
 from dash import html, dcc, Input, Output, State, callback
 from dash.dependencies import ALL
 from dash.exceptions import PreventUpdate
@@ -10,38 +10,60 @@ CSV_PATH = "data/routes.csv"
 NOTIF_CSV_PATH = "data/notification.csv"
 BLUE = "#2f80ed"
 
-# ------------------ CSV Read / Write ------------------
+
 def read_routes():
+    routes = []
     if os.path.exists(CSV_PATH):
-        return pd.read_csv(CSV_PATH)
-    return pd.DataFrame(columns=["id", "start_location", "end_location", "distance_m", "accessible"])
+        with open(CSV_PATH, "r", newline="") as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                row["id"] = int(row["id"])
+                row["distance_m"] = float(row["distance_m"])
+                row["accessible"] = row["accessible"].lower() == "true"
+                routes.append(row)
+    return routes
 
-def save_routes(df):
-    df.to_csv(CSV_PATH, index=False)
+def save_routes(routes):
+    with open(CSV_PATH, "w", newline="") as file:
+        if routes:
+            writer = csv.DictWriter(file, fieldnames=routes[0].keys())
+            writer.writeheader()
+            for r in routes:
+                writer.writerow(r)
 
-# ------------------ Notification Helper ------------------
+
 def add_notification(message, user_id=1):
+    notifications = []
     if os.path.exists(NOTIF_CSV_PATH):
-        df = pd.read_csv(NOTIF_CSV_PATH)
-    else:
-        df = pd.DataFrame(columns=["id", "user_id", "message", "delivered"])
+        with open(NOTIF_CSV_PATH, "r", newline="") as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                row["id"] = int(row["id"])
+                row["user_id"] = int(row["user_id"])
+                row["delivered"] = row["delivered"].lower() == "true"
+                notifications.append(row)
 
-    new_id = int(df.id.max()) + 1 if not df.empty else 1
+    new_id = max((n["id"] for n in notifications), default=0) + 1
 
-    df = pd.concat([
-        df,
-        pd.DataFrame([{
-            "id": new_id,
-            "user_id": user_id,
-            "message": message,
-            "delivered": False
-        }])
-    ], ignore_index=True)
+    notifications.append({
+        "id": new_id,
+        "user_id": user_id,
+        "message": message,
+        "delivered": False
+    })
 
-    df.to_csv(NOTIF_CSV_PATH, index=False)
+    with open(NOTIF_CSV_PATH, "w", newline="") as file:
+        if notifications:
+            writer = csv.DictWriter(file, fieldnames=notifications[0].keys())
+            writer.writeheader()
+            for n in notifications:
+                writer.writerow(n)
 
-# ------------------ Table ------------------
-def generate_table(df):
+
+def generate_table(routes):
+    if not routes:
+        return html.Div("No routes found.")
+
     header = html.Tr([
         html.Th("ID", className="p-2 bg-light border"),
         html.Th("Start", className="p-2 bg-light border"),
@@ -52,36 +74,36 @@ def generate_table(df):
     ])
 
     rows = []
-    for _, row in df.iterrows():
-        accessible_text = "✅ Yes" if row.accessible else "❌ No"
-        accessible_color = BLUE if row.accessible else "red"
+    for r in routes:
+        accessible_text = "✅ Yes" if r["accessible"] else "❌ No"
+        accessible_color = BLUE if r["accessible"] else "red"
 
         rows.append(
             html.Tr([
-                html.Td(row.id, className="p-2 border"),
-                html.Td(row.start_location, className="p-2 border"),
-                html.Td(row.end_location, className="p-2 border"),
-                html.Td(row.distance_m, className="p-2 border"),
+                html.Td(r["id"], className="p-2 border"),
+                html.Td(r["start_location"], className="p-2 border"),
+                html.Td(r["end_location"], className="p-2 border"),
+                html.Td(r["distance_m"], className="p-2 border"),
                 html.Td(
                     html.Span(accessible_text, style={"color": accessible_color, "fontWeight": "bold"}),
                     className="p-2 border"
                 ),
                 html.Td([
-                    dbc.Button("Edit", id={"type": "edit", "index": int(row.id)}, color="warning", size="sm", className="me-1"),
-                    dbc.Button("Delete", id={"type": "delete", "index": int(row.id)}, color="danger", size="sm")
+                    dbc.Button("Edit", id={"type": "edit", "index": int(r["id"])}, color="warning", size="sm", className="me-1"),
+                    dbc.Button("Delete", id={"type": "delete", "index": int(r["id"])}, color="danger", size="sm")
                 ])
             ])
         )
 
     return dbc.Table([header] + rows, bordered=False, hover=True, responsive=True, striped=True, className="mb-0")
 
-# ------------------ Layout ------------------
+
 def layout():
-    df = read_routes()
+    routes = read_routes()
 
     return dbc.Container([
 
-        # ✅ Toast (ADDED – does not replace msg)
+       
         dbc.Toast(
             id="route-toast",
             header="Success",
@@ -139,14 +161,13 @@ def layout():
                         style={"maxWidth": "300px"}
                     ))
                 ]),
-                html.Div(id="table", children=generate_table(df))
+                html.Div(id="table", children=generate_table(routes))
             ]
         ),
     ], fluid=True)
 
-# ------------------ Callbacks ------------------
 
-# Delete
+
 @callback(
     Output("table", "children", allow_duplicate=True),
     Output("route-toast", "children", allow_duplicate=True),
@@ -160,17 +181,17 @@ def delete_route(clicks):
 
     route_id = dash.callback_context.triggered_id["index"]
 
-    df = read_routes()
-    r = df[df.id == route_id].iloc[0]
+    routes = read_routes()
+    r = next((route for route in routes if route["id"] == route_id), None)
 
-    df = df[df.id != route_id]
-    save_routes(df)
+    routes = [route for route in routes if route["id"] != route_id]
+    save_routes(routes)
 
-    add_notification(f"Route '{r.start_location} → {r.end_location}' deleted")
+    add_notification(f"Route '{r['start_location']} → {r['end_location']}' deleted")
 
-    return generate_table(df), "Route deleted successfully", True
+    return generate_table(routes), "Route deleted successfully", True
 
-# Edit
+
 @callback(
     Output("start", "value", allow_duplicate=True),
     Output("end", "value", allow_duplicate=True),
@@ -186,12 +207,12 @@ def edit_route(clicks):
         raise PreventUpdate
 
     route_id = dash.callback_context.triggered_id["index"]
-    df = read_routes()
-    r = df[df.id == route_id].iloc[0]
+    routes = read_routes()
+    r = next((route for route in routes if route["id"] == route_id), None)
 
-    return r.start_location, r.end_location, r.distance_m, r.accessible, "Update", route_id
+    return r["start_location"], r["end_location"], r["distance_m"], r["accessible"], "Update", route_id
 
-# Reset
+
 @callback(
     Output("start", "value", allow_duplicate=True),
     Output("end", "value", allow_duplicate=True),
@@ -206,7 +227,7 @@ def edit_route(clicks):
 def reset_form(_):
     return "", "", None, None, "Add", None, ""
 
-# Add / Update
+
 @callback(
     Output("table", "children", allow_duplicate=True),
     Output("msg", "children"),
@@ -224,41 +245,44 @@ def save_route(_, s, e, d, a, edit_id):
     if not all([s, e]) or d is None or a is None:
         return dash.no_update, "Please fill all fields", dash.no_update, False
 
-    df = read_routes()
+    routes = read_routes()
 
     if edit_id is not None:
-        df.loc[df.id == edit_id, ["start_location", "end_location", "distance_m", "accessible"]] = [s, e, d, a]
+        for r in routes:
+            if r["id"] == edit_id:
+                r["start_location"] = s
+                r["end_location"] = e
+                r["distance_m"] = d
+                r["accessible"] = a
+                break
         msg = "Route updated"
         add_notification(f"Route '{s} → {e}' updated")
     else:
-        new_id = int(df.id.max()) + 1 if not df.empty else 1
-        df = pd.concat([
-            df,
-            pd.DataFrame([{
-                "id": new_id,
-                "start_location": s,
-                "end_location": e,
-                "distance_m": d,
-                "accessible": a
-            }])
-        ], ignore_index=True)
+        new_id = max((r["id"] for r in routes), default=0) + 1
+        routes.append({
+            "id": new_id,
+            "start_location": s,
+            "end_location": e,
+            "distance_m": d,
+            "accessible": a
+        })
         msg = "Route added"
         add_notification(f"New route '{s} → {e}' added")
 
-    save_routes(df)
-    return generate_table(df), msg, msg, True
+    save_routes(routes)
+    return generate_table(routes), msg, msg, True
 
-# Search
+
 @callback(
     Output("table", "children", allow_duplicate=True),
     Input("search", "value"),
     prevent_initial_call=True
 )
 def search_routes(text):
-    df = read_routes()
+    routes = read_routes()
     if not text:
-        return generate_table(df)
+        return generate_table(routes)
 
     t = text.lower()
-    df = df[df.apply(lambda r: t in str(r).lower(), axis=1)]
-    return generate_table(df)
+    filtered = [r for r in routes if t in str(r).lower()]
+    return generate_table(filtered)

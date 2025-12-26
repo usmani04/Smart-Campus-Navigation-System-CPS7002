@@ -1,5 +1,5 @@
 id,name,building,floor,accessible
-1,"Kennedy, Phillips and White",Main,1,False
+1,"Kennedy, Phillips and White",Main,1,True
 2,"Hawkins, Nielsen and White",Science,2,True
 3,Hood Inc,Engineering,4,False
 4,Torres-Brown,Recreation,5,True
@@ -199,8 +199,3 @@ id,name,building,floor,accessible
 198,"Mcgrath, Hayes and Lambert",Commons,1,False
 199,Garcia PLC,Engineering,1,False
 200,Smith-Pruitt,Recreation,5,False
-201,Lab,main,2,True
-202,Lab,main,2,True
-203,Lab,main,2,True
-204,Lab,main,2,True
-205,Lab,main,2,True

@@ -14,18 +14,18 @@ from pages import (
 )
 import json
 
-# ------------------ COLORS ------------------
+
 BLUE = "#0B63C5"
 LIGHT = "#F4F9FF"
 WHITE = "#FFFFFF"
 
 dash.register_page(__name__, path="/dashboard")
 
-# ------------------ STYLES ------------------
+
 def menu_btn_class():
     return "p-3 mb-2 bg-light rounded border fs-6 cursor-pointer"
 
-# ------------------ DEFAULT DASHBOARD SCREEN ------------------
+
 def dashboard_welcome():
     return html.Div(
         className="d-flex flex-column align-items-center justify-content-center text-center",
@@ -47,7 +47,7 @@ def dashboard_welcome():
         ],
     )
 
-# ------------------ LAYOUT ------------------
+
 def layout():
     return html.Div(
         className="bg-light min-vh-100",
@@ -55,7 +55,7 @@ def layout():
             dcc.Location(id="dash-url"),
             dcc.Store(id="current-user", storage_type="session"),
 
-            # 🔵 TOP BAR
+            
             dbc.Navbar(
                 dbc.Container(
                     [
@@ -95,11 +95,11 @@ def layout():
                 className="py-3",
             ),
 
-            # 🔵 BODY
+            
             dbc.Row(
                 className="g-0",
                 children=[
-                    # 🟢 SIDEBAR
+                  
                     dbc.Col(
                         width="auto",
                         className="bg-white p-3 shadow-sm min-vh-100",
@@ -131,18 +131,17 @@ def layout():
                         ],
                     ),
 
-                    # 🔵 MAIN CONTENT
+                
                     dbc.Col(
                         id="dashboard-content",
                         className="p-4 flex-grow-1",
-                        children=dashboard_welcome(),  # 👈 DEFAULT SCREEN
+                        children=dashboard_welcome(), 
                     ),
                 ],
             ),
         ],
     )
 
-# ------------------ ROLE BASED MENU ------------------
 @callback(
     Output("menu-notification", "style"),
     Output("menu-locations", "style"),
@@ -160,9 +159,9 @@ def toggle_sidebar_items(current_user_data):
     role = user.get("role")
 
     return (
-        {"display": "block"},  # notifications
-        {"display": "block"},  # locations
-        {"display": "block"},  # routes
+        {"display": "block"},  
+        {"display": "block"},
+        {"display": "block"},  
         {"display": "block"} if role == "admin" else {"display": "none"},
         {"display": "block"} if role == "admin" else {"display": "none"},
     )
